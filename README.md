@@ -124,7 +124,11 @@ Once successfully created, you will get an output like this:
 * Author:: Anthony Rees <anthony@chef.io>
 
 * Awesome Contributions From:: 
-*** Nigel Wright - https://github.com/nwright-nz
+
+*** Niamh Cahill 
+*** Ken Langdon 
+*** Brad Dausses 
+*** Jeff Vogt
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
