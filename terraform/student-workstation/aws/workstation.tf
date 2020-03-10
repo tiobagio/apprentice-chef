@@ -56,8 +56,12 @@ resource "aws_instance" "workstation" {
 
 ## Copy the User and Validator PEM files for knife to work on the Student Workstation
   provisioner "file" {
-    source      = "${path.module}/files/"
-    destination = "C:/Chef/.chef"
+      source      = "${path.module}/files/user_pem"
+      destination = "C:/Chef/.chef/anthony.pem"
+  }
+  provisioner "file" {
+    source      = "${path.module}/files/validator_pem"
+    destination = "C:/Chef/.chef/reesyorg.pem"
   }
 
   tags {
