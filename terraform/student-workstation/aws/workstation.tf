@@ -55,13 +55,34 @@ resource "aws_instance" "workstation" {
     EOF
 
 ## Copy the User and Validator PEM files for knife to work on the Student Workstation
+  provisioner "local-exec" {
+    command = "sleep 180"
+  }
+  
   provisioner "file" {
       source      = "${path.module}/files/user_pem"
       destination = "C:/Chef/.chef/anthony.pem"
+      connection {
+        host = "${aws_instance.workstation.public_ip}"
+        type     = "winrm"
+        user     = "hab"
+        password = "ch3fh@b1!"
+        insecure = true
+        timeout = "10m"
+      }
   }
+
   provisioner "file" {
     source      = "${path.module}/files/validator_pem"
     destination = "C:/Chef/.chef/reesyorg.pem"
+    connection {
+        host = "${aws_instance.workstation.public_ip}"
+        type     = "winrm"
+        user     = "hab"
+        password = "ch3fh@b1!"
+        insecure = true
+        timeout = "10m"
+      }
   }
 
   tags {
@@ -80,10 +101,17 @@ resource "aws_instance" "workstation" {
   #   ]
   # }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "PowerShell.exe -Command \"start-process -FilePath 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe -ArgumentList 'www.quora.com''\"",
-  #   ]
-
-
+  provisioner "remote-exec" {
+    inline = [
+      "PowerShell.exe -Command \"start-process -FilePath 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe -ArgumentList 'www.google.com''\"",
+    ]
+      connection {
+        host = "${aws_instance.workstation.public_ip}"
+        type     = "winrm"
+        user     = "hab"
+        password = "ch3fh@b1!"
+        insecure = true
+        timeout = "10m"
+      }
   }
+}
