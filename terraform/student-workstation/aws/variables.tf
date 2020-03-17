@@ -38,6 +38,8 @@ variable "automate_hostname" {
   description = "automate_hostname is the hostname which will be given to your A2 instance"
 }
 
+variable "a2_ip" {}
+variable "key_path" {}
 
 ////////////////////////////////
 // Instance Configs

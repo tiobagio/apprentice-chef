@@ -68,7 +68,9 @@ When the Chef Infra Server is created, the User and ORG (validator) pem files ar
 - User pem file required by Knife - `/home/ubuntu/anthony.pem`
 - Validator pem file required for bootstrapping nodes - `/home/ubuntu/reesyorg-validator.pem`
 
-The PEM files are also output in the `terraform` stdout in the CLI.
+The PEM files are also `SCP`d to your Laptop.  You can find them at `/Users/<username>/` and their names are:
+- `anthony-<automate-ip>.pem`
+- `reesyorg-validator-<automate-ip>.pem`
 
 ### Step 3- Student Workstations
 
@@ -127,6 +129,33 @@ Push the ```terraform``` output to a file
 ```bash
 export TF_LOG_PATH=./terraform.log
 ```
+
+Rerun for one state only
+```bash
+terraform state list
+```
+
+Your output will look like this
+```bash
+aws_ami.windows_workstation
+aws_instance.workstation
+aws_internet_gateway.habworkshop-gateway
+aws_route.habworkshop-internet-access
+aws_security_group.habworkshop
+aws_security_group_rule.ingress_rdp_all
+aws_security_group_rule.ingress_winrm_all
+aws_security_group_rule.windows_egress_allow_0-65535_all
+aws_subnet.habworkshop-subnet
+aws_vpc.habworkshop-vpc
+null_resource.key_user
+random_id.instance_id
+```
+
+Remove the state
+```bash
+terraform state rm null_resource.key_user
+```
+Re apply
 
 
 ## License and Author

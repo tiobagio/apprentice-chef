@@ -21,12 +21,3 @@ output "a2_token" {
 output "a2_url" {
   value = "${data.external.a2_secrets.result["a2_url"]}"
 }
-
-
-output "chef_svr_validator" {
-  value = "${var.chef_svr_validator}"
-}
-
-output "chef_svr_user" {
-  value = "${var.chef_svr_user}"
-}

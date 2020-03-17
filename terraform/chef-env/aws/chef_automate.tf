@@ -254,7 +254,16 @@ resource "aws_instance" "chef_automate" {
       "export TOK=`sudo chef-automate admin-token`",
       "echo $TOK",
       "sudo echo xxxxx Add Users xxxxx",
-      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Your Name\", \"username\":\"username001rulez\", \"password\":\"password\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-1\", \"username\":\"workstation-1\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-2\", \"username\":\"workstation-2\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-3\", \"username\":\"workstation-3\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-4\", \"username\":\"workstation-4\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-5\", \"username\":\"workstation-5\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-6\", \"username\":\"workstation-6\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-7\", \"username\":\"workstation-7\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-8\", \"username\":\"workstation-8\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-9\", \"username\":\"workstation-9\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-10\", \"username\":\"workstation-10\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
       "bash /tmp/download_compliance_profiles.sh",
     ]
   }

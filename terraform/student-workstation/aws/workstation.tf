@@ -55,36 +55,6 @@ resource "aws_instance" "workstation" {
     </powershell>
     EOF
 
-## Copy the User and Validator PEM files for knife to work on the Student Workstation
-  # provisioner "local-exec" {
-  #   command = "sleep 180"
-  # }
-  
-  provisioner "file" {
-      source      = "${path.module}/files/user_pem"
-      destination = "C:/Chef/.chef/anthony.pem"
-      connection {
-        host = "${self.public_ip}"
-        type     = "winrm"
-        user     = "hab"
-        password = "ch3fh@b1!"
-        insecure = true
-        timeout = "10m"
-      }
-  }
-
-  # provisioner "file" {
-  #   source      = "${path.module}/files/validator_pem"
-  #   destination = "C:/Chef/.chef/reesyorg.pem"
-  #   connection {
-  #       host = "${aws_instance.workstation.public_ip}"
-  #       type     = "winrm"
-  #       user     = "hab"
-  #       password = "ch3fh@b1!"
-  #       insecure = true
-  #       timeout = "10m"
-  #     }
-  # }
 
   tags {
     Name          = "${var.tag_contact}-${var.tag_customer}-habworkshop-${count.index}"
@@ -95,19 +65,77 @@ resource "aws_instance" "workstation" {
     X-Contact     = "${var.tag_contact}"
     X-TTL         = "${var.tag_ttl}"
   }
-
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "PowerShell.exe -Command \"start-process -FilePath 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe -ArgumentList 'www.google.com''\"",
-  #   ]
-  #     connection {
-  #       host = "${aws_instance.workstation.public_ip}"
-  #       type     = "winrm"
-  #       user     = "hab"
-  #       password = "ch3fh@b1!"
-  #       insecure = true
-  #       timeout = "10m"
-  #     }
-  # }
 }
+
+resource "null_resource" "wait_for_mins" {
+  depends_on = ["aws_instance.workstation"]
+  ## This sleep is required to allow the Windows machine to be ready to accept the files.
+  provisioner "local-exec" {
+    command = "sleep 180"
+  }
+}
+
+
+resource "null_resource" "key_user" {
+  depends_on = ["null_resource.wait_for_mins"]
+  provisioner "file" {
+      source      = "${var.key_path}/anthony-${var.a2_ip}.pem"
+      destination = "C:\\Chef\\.chef\\anthony.pem"
+      connection {
+        host = "${aws_instance.workstation.public_ip}"
+        type     = "winrm"
+        user     = "hab"
+        password = "ch3fh@b1!"
+        insecure = true
+        timeout = "10m"
+      }
+  }
+
+}
+
+resource "null_resource" "key_validator" {
+  depends_on = ["null_resource.wait_for_mins"]
+  provisioner "file" {
+      source      = "${var.key_path}/reesyorg-validator-${var.a2_ip}.pem"
+      destination = "C:\\Chef\\.chef\\reesyorg.pem"
+      connection {
+          host = "${aws_instance.workstation.public_ip}"
+          type     = "winrm"
+          user     = "hab"
+          password = "ch3fh@b1!"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+resource "null_resource" "key_kitchen" {
+  depends_on = ["null_resource.wait_for_mins"]
+  provisioner "file" {
+      source      = "${var.key_path}/src/cookbooks/id_rsa"
+      destination = "C:\\Users\\Chef\\.ssh\\id_rsa"
+      connection {
+          host = "${aws_instance.workstation.public_ip}"
+          type     = "winrm"
+          user     = "hab"
+          password = "ch3fh@b1!"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+
+# resource "null_resource" "browser" {
+#   provisioner "remote-exec" {
+#     inline = [
+#       "PowerShell.exe -Command \"start-process -FilePath 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe -ArgumentList 'https://${var.automate_hostname}''\"",
+#     ]
+#       connection {
+#         host = "${aws_instance.workstation.public_ip}"
+#         type     = "winrm"
+#         user     = "hab"
+#         password = "ch3fh@b1!"
+#         insecure = true
+#         timeout = "10m"
+#       }
+#   }
+# }
