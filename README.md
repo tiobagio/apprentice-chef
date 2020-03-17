@@ -4,11 +4,20 @@
 This repo creates a Chef Training Environment to teach Chef Essentials, Introduction to Inspec and Habitat Jumpstart.  It creates the following:
 - Chef-Env
     - Chef Automate
+      - Loads InSpec Profiles
+      - Creates 10 local users for the students
     - Chef Infra Server
+      - Creates user pem and org validator
     - Habitat OnPrem Builder
 
 - Student-Workstation
   - Windows 2016 Student Workstation(s)
+    - Installs VS Code, Git, Cmder
+    - Configures Test-Kitchen
+    - Configures Knife to communicate with the Chef Server
+
+This environment is made to work with the following training repo - https://github.com/anthonygrees/compliance-workshop
+
 
 ### Step 1 - Get Started
 First you need the code !

@@ -21,3 +21,10 @@ output "a2_token" {
 output "a2_url" {
   value = "${data.external.a2_secrets.result["a2_url"]}"
 }
+
+output "sg" {
+  value= "${aws_security_group.chef_automate.id}"
+}
+output "subnet_id" {
+  value = "${aws_subnet.chef_automate.id}"
+}
