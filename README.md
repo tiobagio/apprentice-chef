@@ -12,7 +12,8 @@ This repo creates a Chef Training Environment to teach Chef Essentials, Introduc
 
 - Student-Workstation
   - Windows 2016 Student Workstation(s)
-    - Installs VS Code, Git, Cmder
+    - Installs VS Code, Git, Cmder, Chrome, Chef Workstation
+    - Creates a working directory in `C:\Chef`
     - Configures Test-Kitchen
     - Configures Knife to communicate with the Chef Server
 
