@@ -88,11 +88,11 @@ User - `chef`
 Password - `RL9@T40BTmXh`
 
 #### Set the PEM files
-You need to take the two PEM files created by the Chef Server when you ran the `terraform` above and copy them into:
-- `/apprentice-chef/student-workstation/files/user.pem.file`
-- `/apprentice-chef/student-workstation/files/validator.pem.file`
+The two PEM files created by the Chef Server when you ran the `terraform` above have been stored on your Laptop at `/Users/<username>/` and their names are:
+- `anthony-<automate-ip>.pem`
+- `reesyorg-validator-<automate-ip>.pem`
 
-These will then be copied to the Student Workstation so that `knife` can connect to the 
+These will then be copied to the Student Workstation so that `knife` can connect to the Chef Server.
 
 #### Create the Chef Training Environment
 ```bash
