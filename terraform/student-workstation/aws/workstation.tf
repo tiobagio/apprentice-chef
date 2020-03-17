@@ -13,6 +13,7 @@ resource "aws_instance" "workstation" {
   subnet_id                   = "${aws_subnet.habworkshop-subnet.id}"
   vpc_security_group_ids      = ["${aws_security_group.habworkshop.id}"]
   associate_public_ip_address = true
+  iam_instance_profile = "testKitchenAndKnifeEc2"
 
   root_block_device {
     delete_on_termination = true
@@ -55,15 +56,15 @@ resource "aws_instance" "workstation" {
     EOF
 
 ## Copy the User and Validator PEM files for knife to work on the Student Workstation
-  provisioner "local-exec" {
-    command = "sleep 180"
-  }
+  # provisioner "local-exec" {
+  #   command = "sleep 180"
+  # }
   
   provisioner "file" {
       source      = "${path.module}/files/user_pem"
       destination = "C:/Chef/.chef/anthony.pem"
       connection {
-        host = "${aws_instance.workstation.public_ip}"
+        host = "${self.public_ip}"
         type     = "winrm"
         user     = "hab"
         password = "ch3fh@b1!"
@@ -72,18 +73,18 @@ resource "aws_instance" "workstation" {
       }
   }
 
-  provisioner "file" {
-    source      = "${path.module}/files/validator_pem"
-    destination = "C:/Chef/.chef/reesyorg.pem"
-    connection {
-        host = "${aws_instance.workstation.public_ip}"
-        type     = "winrm"
-        user     = "hab"
-        password = "ch3fh@b1!"
-        insecure = true
-        timeout = "10m"
-      }
-  }
+  # provisioner "file" {
+  #   source      = "${path.module}/files/validator_pem"
+  #   destination = "C:/Chef/.chef/reesyorg.pem"
+  #   connection {
+  #       host = "${aws_instance.workstation.public_ip}"
+  #       type     = "winrm"
+  #       user     = "hab"
+  #       password = "ch3fh@b1!"
+  #       insecure = true
+  #       timeout = "10m"
+  #     }
+  # }
 
   tags {
     Name          = "${var.tag_contact}-${var.tag_customer}-habworkshop-${count.index}"
@@ -95,23 +96,18 @@ resource "aws_instance" "workstation" {
     X-TTL         = "${var.tag_ttl}"
   }
 
+
   # provisioner "remote-exec" {
   #   inline = [
-  #     "PowerShell.exe -Command \"cmder\"",
+  #     "PowerShell.exe -Command \"start-process -FilePath 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe -ArgumentList 'www.google.com''\"",
   #   ]
+  #     connection {
+  #       host = "${aws_instance.workstation.public_ip}"
+  #       type     = "winrm"
+  #       user     = "hab"
+  #       password = "ch3fh@b1!"
+  #       insecure = true
+  #       timeout = "10m"
+  #     }
   # }
-
-  provisioner "remote-exec" {
-    inline = [
-      "PowerShell.exe -Command \"start-process -FilePath 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe -ArgumentList 'www.google.com''\"",
-    ]
-      connection {
-        host = "${aws_instance.workstation.public_ip}"
-        type     = "winrm"
-        user     = "hab"
-        password = "ch3fh@b1!"
-        insecure = true
-        timeout = "10m"
-      }
-  }
 }
