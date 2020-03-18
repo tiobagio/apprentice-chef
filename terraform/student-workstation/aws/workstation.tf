@@ -75,7 +75,7 @@ resource "null_resource" "wait_for_mins" {
   }
 }
 
-
+## Set Keys
 resource "null_resource" "key_user" {
   depends_on = ["null_resource.wait_for_mins"]
   provisioner "file" {
@@ -118,6 +118,55 @@ resource "null_resource" "key_kitchen" {
           type     = "winrm"
           user     = "hab"
           password = "ch3fh@b1!"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+
+## Set wallpaper
+resource "null_resource" "wallpaper_upload" {
+  depends_on = ["null_resource.wait_for_mins"]
+  provisioner "file" {
+      source      = "${path.module}/scripts/wallpaper.png"
+      destination = "C:\\Chef\\wallpaper.png"
+      connection {
+          host = "${aws_instance.workstation.public_ip}"
+          type     = "winrm"
+          user     = "hab"
+          password = "ch3fh@b1!"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+
+resource "null_resource" "wallpaper_script_upload" {
+  depends_on = ["null_resource.wallpaper_upload"]
+  provisioner "file" {
+      source      = "${path.module}/scripts/background.ps1"
+      destination = "C:\\Chef\\background.ps1"
+      connection {
+          host = "${aws_instance.workstation.public_ip}"
+          type     = "winrm"
+          user     = "chef"
+          password = "RL9@T40BTmXh"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+resource "null_resource" "wallpaper_run_script" {
+  depends_on = ["null_resource.wallpaper_script_upload"]
+  provisioner "remote-exec" {
+    inline = [
+      "powershell -ExecutionPolicy Unrestricted -File C:\\Chef\\background.ps1 -Schedule",
+    ]
+    connection {
+          host = "${aws_instance.workstation.public_ip}"
+          type     = "winrm"
+          user     = "chef"
+          password = "RL9@T40BTmXh"
           insecure = true
           timeout = "10m"
         }
