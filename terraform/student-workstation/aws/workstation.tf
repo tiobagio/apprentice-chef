@@ -71,7 +71,7 @@ resource "null_resource" "wait_for_mins" {
   depends_on = ["aws_instance.workstation"]
   ## This sleep is required to allow the Windows machine to be ready to accept the files.
   provisioner "local-exec" {
-    command = "sleep 180"
+    command = "sleep 280"
   }
 }
 

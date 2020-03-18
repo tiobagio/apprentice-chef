@@ -25,6 +25,9 @@ output "a2_url" {
 output "sg" {
   value= "${aws_security_group.chef_automate.id}"
 }
-output "subnet_id" {
-  value = "${aws_subnet.chef_automate.id}"
+output "subnet_id_a" {
+  value = "${aws_subnet.habmgmt-subnet-a.id}"
+}
+output "subnet_id_b" {
+  value = "${aws_subnet.habmgmt-subnet-b.id}"
 }
