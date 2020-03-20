@@ -64,3 +64,24 @@ data "aws_ami" "ubuntu16" {
 
   owners = ["099720109477"]
 }
+
+
+////////////////////////////////
+// Workstation
+
+data "aws_ami" "windows_workstation" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["windows_2016_habitat_workstation_*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["496323866215"]
+
+}

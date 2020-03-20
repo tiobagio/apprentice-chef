@@ -30,10 +30,6 @@ variable "aws_ami_id" {
   default = ""
 }
 
-variable "origin" {
-  default = ""
-}
-
 
 ////////////////////////////////
 // Object Tags
@@ -146,4 +142,38 @@ variable "chef_svr_user" {
 variable "chef_svr_validator" {
   default = "aa"
   description = "Chef Server Org validator .pem file"
+}
+
+variable "origin" {
+  default = ""
+}
+
+variable "chef_users" {
+  type = "list"
+  default = ["admin", "automate", "workstation-1"]
+}
+
+variable "chef_user1" {
+  default = "admin"
+}
+
+variable "chef_user2" {
+  default = "automate"
+}
+
+variable "chef_user3" {
+  default = "workstation-1"
+}
+
+variable "chef_organization" {
+  default = "automate"
+}
+
+
+////////////////////////////////
+// Workstation 
+variable "a2_ip" {}
+variable "key_path" {}
+variable "count" {
+    default = "1"
 }
