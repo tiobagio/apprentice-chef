@@ -172,7 +172,7 @@ variable "chef_organization" {
 
 ////////////////////////////////
 // Workstation 
-variable "a2_ip" {}
+# variable "a2_ip" {}
 variable "key_path" {}
 variable "count" {
     default = "1"

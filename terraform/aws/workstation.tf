@@ -1,4 +1,5 @@
 resource "aws_instance" "workstation" {
+    depends_on = ["aws_instance.chef_automate"]
 
   connection {
     type     = "winrm"
@@ -50,9 +51,9 @@ resource "aws_instance" "workstation" {
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'current_dir = File.dirname(__FILE__)'
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'log_level                :info'
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'log_location             STDOUT'
-    Add-Content -Path C:\Chef\.chef\config.rb -Value 'node_name                "anthony"'
-    Add-Content -Path C:\Chef\.chef\config.rb -Value 'client_key               "#{current_dir}/anthony.pem"'
-    Add-Content -Path C:\Chef\.chef\config.rb -Value 'chef_server_url          "https://${var.automate_hostname}/organizations/reesyorg"'
+    Add-Content -Path C:\Chef\.chef\config.rb -Value 'node_name                "${var.chef_user1}"'
+    Add-Content -Path C:\Chef\.chef\config.rb -Value 'client_key               "#{current_dir}/${var.chef_user1}.pem"'
+    Add-Content -Path C:\Chef\.chef\config.rb -Value 'chef_server_url          "https://${var.automate_hostname}/organizations/${var.chef_organization}"'
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'cookbook_path            ["#{current_dir}/../cookbooks"]'
     </powershell>
     EOF
@@ -73,15 +74,15 @@ resource "null_resource" "wait_for_mins" {
   depends_on = ["aws_instance.workstation"]
   ## This sleep is required to allow the Windows machine to be ready to accept the files.
   provisioner "local-exec" {
-    command = "sleep 280"
+    command = "sleep 320"
   }
 }
 
 resource "null_resource" "key_user" {
   depends_on = ["null_resource.wait_for_mins"]
   provisioner "file" {
-      source      = "${var.key_path}/anthony-${var.a2_ip}.pem"
-      destination = "C:\\Chef\\.chef\\anthony.pem"
+      source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
+      destination = "C:\\Chef\\.chef\\${var.chef_user1}.pem"
       connection {
         host = "${aws_instance.workstation.public_ip}"
         type     = "winrm"
@@ -97,8 +98,8 @@ resource "null_resource" "key_user" {
 resource "null_resource" "key_validator" {
   depends_on = ["null_resource.wait_for_mins"]
   provisioner "file" {
-      source      = "${var.key_path}/reesyorg-validator-${var.a2_ip}.pem"
-      destination = "C:\\Chef\\.chef\\reesyorg.pem"
+      source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
+      destination = "C:\\Chef\\.chef\\${var.chef_organization}.pem"
       connection {
           host = "${aws_instance.workstation.public_ip}"
           type     = "winrm"
