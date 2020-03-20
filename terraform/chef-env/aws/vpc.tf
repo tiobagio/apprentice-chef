@@ -1,5 +1,5 @@
 resource "aws_vpc" "habmgmt-vpc" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = "172.31.0.0/16"
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
 
@@ -30,7 +30,7 @@ resource "aws_route" "habmgmt-internet-access" {
 
 resource "aws_subnet" "habmgmt-subnet-a" {
   vpc_id                  = "${aws_vpc.habmgmt-vpc.id}"
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = "172.31.54.0/24"
   map_public_ip_on_launch = true
   availability_zone = "${var.aws_region}a"
 
@@ -41,7 +41,7 @@ resource "aws_subnet" "habmgmt-subnet-a" {
 
 resource "aws_subnet" "habmgmt-subnet-b" {
   vpc_id                  = "${aws_vpc.habmgmt-vpc.id}"
-  cidr_block              = "10.0.10.0/24"
+  cidr_block              = "172.31.55.0/24"
   map_public_ip_on_launch = true
   availability_zone = "${var.aws_region}b"
 

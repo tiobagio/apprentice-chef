@@ -153,6 +153,14 @@ resource "aws_security_group_rule" "linux_egress_allow_0-65535_all" {
 }
 
 
+data "template_file" "install_chef_automate_cli" {
+  template = "${file("${path.module}/templates/chef_automate/install_chef_automate_cli.sh.tpl")}"
+
+  vars {
+    channel = "${var.channel}"
+  }
+}
+
 data "template_file" "automate_eas_config" {
   template = "${file("${path.module}/templates/chef_automate/automate-eas-config.toml.tpl")}"
 
@@ -160,6 +168,15 @@ data "template_file" "automate_eas_config" {
     disable_event_tls = "${var.disable_event_tls}"
   }
 } 
+
+data "template_file" "download_compliance_profiles" {
+  template = "${file("${path.module}/templates/chef_automate/download_compliance_profiles.sh.tpl")}"
+
+  vars {
+    automate_hostname = "${var.automate_hostname}"
+  }
+}
+
 
 data "template_file" "user_data" {
   template = "${file("${path.module}/templates/chef_automate/user_data.sh.tpl")}"
@@ -170,8 +187,8 @@ data "template_file" "user_data" {
     var_automate_custom_ssl = "${var.automate_custom_ssl}"
     var_automate_hostname = "${var.automate_hostname}"
     var_automate_license = "${var.automate_license}"
-    var_chef_user1 = "${var.chef_user1}"
-    var_chef_organization = "${var.chef_organization}"
+    var_chef-user1 = "${var.chef-user1}"
+    var_chef-organization = "${var.chef-organization}"
   }
 }
 
@@ -188,7 +205,6 @@ resource "aws_instance" "chef_automate" {
   private_ip              = "172.31.54.11"
   vpc_security_group_ids = ["${aws_security_group.chef_automate.id}"]
   ebs_optimized          = true
-#  user_data             = "${data.template_file.user_data.rendered}"
 
   root_block_device {
     delete_on_termination = true
@@ -207,6 +223,11 @@ resource "aws_instance" "chef_automate" {
   }
 
   provisioner "file" {
+    destination = "/tmp/install_chef_automate_cli.sh"
+    content     = "${data.template_file.install_chef_automate_cli.rendered}"
+  }
+
+  provisioner "file" {
     destination = "/tmp/automate-eas-config.toml"
     content     = "${data.template_file.automate_eas_config.rendered}"
   }
@@ -221,16 +242,67 @@ resource "aws_instance" "chef_automate" {
     content = "${var.automate_custom_ssl_private_key}"
   }
 
+    # Write /tmp/download_compliance_profiles.sh
+    provisioner "file" {
+      destination = "/tmp/download_compliance_profiles.sh"
+      content      = "${data.template_file.download_compliance_profiles.rendered}"
+    }
+
     provisioner "file" {
       destination = "/tmp/user_data.sh"
       content      = "${data.template_file.user_data.rendered}"
     }
 
+
   provisioner "remote-exec" {
     inline = [
-      "bash /tmp/user_data.sh"
+      "sudo hostnamectl set-hostname ${var.automate_hostname}",
+      "sudo sysctl -w vm.max_map_count=262144",
+      "sudo sysctl -w vm.dirty_expire_centisecs=20000",
+      "sudo mkdir -p /etc/chef-automate",
+      "curl https://packages.chef.io/files/${var.channel}/latest/chef-automate-cli/chef-automate_linux_amd64.zip |gunzip - > chef-automate && chmod +x chef-automate",
+#      "sudo chmod +x /tmp/install_chef_automate_cli.sh",
+#      "sudo bash /tmp/install_chef_automate_cli.sh",
+      "sudo ./chef-automate init-config --file /tmp/config.toml $(if ${var.automate_custom_ssl}; then echo '--certificate /tmp/ssl_cert --private-key /tmp/ssl_key'; fi)",
+      "sudo sed -i 's/fqdn = \".*\"/fqdn = \"${var.automate_hostname}\"/g' /tmp/config.toml",
+      "sudo sed -i 's/channel = \".*\"/channel = \"${var.channel}\"/g' /tmp/config.toml",
+      "sudo sed -i 's/license = \".*\"/license = \"${var.automate_license}\"/g' /tmp/config.toml",
+#     "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
+      "sudo mv /tmp/config.toml /etc/chef-automate/config.toml",
+      "sudo ./chef-automate deploy /etc/chef-automate/config.toml --product automate --product chef-server --product builder --accept-terms-and-mlsa",
+#      "sudo ./chef-automate applications enable",
+      "sleep 90",
+      "sudo ./chef-automate config patch /tmp/automate-eas-config.toml",
+#      "sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml",
+#      "sudo echo -e \"api-token =\" $(sudo chef-automate admin-token) >> $HOME/automate-credentials.toml",
+#      "sudo cat $HOME/automate-credentials.toml",
+      "sudo chef-server-ctl user-create ${var.chef-user1} chef user ${var.chef-user1}@chef.io '1234chefabcd' --filename $HOME/${var.chef-user1}.pem",
+      "sudo echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Client PEM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "sudo cat $HOME/${var.chef-user1}.pem",
+      "sudo chef-server-ctl org-create ${var.chef-organization} 'automate' --association_user ${var.chef-user1}  --filename $HOME/${var.chef-organization}-validator.pem",
+      "sudo echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Validator PEM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "sudo cat $HOME/${var.chef-organization}-validator.pem",
+      "sudo snap install jq",
+      "export TOK=`sudo chef-automate admin-token`",
+      "echo $TOK",
+      "sudo echo xxxxx Add Users xxxxx",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-1\", \"username\":\"workstation-1\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-2\", \"username\":\"workstation-2\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-3\", \"username\":\"workstation-3\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-4\", \"username\":\"workstation-4\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-5\", \"username\":\"workstation-5\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-6\", \"username\":\"workstation-6\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-7\", \"username\":\"workstation-7\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-8\", \"username\":\"workstation-8\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-9\", \"username\":\"workstation-9\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "curl -k -H \"api-token: $TOK\" -H \"Content-Type: application/json\" -d '{\"name\":\"Workstation-10\", \"username\":\"workstation-10\", \"password\":\"workstation!\"}' https://${var.automate_hostname}/api/v0/auth/users?pretty",
+      "bash /tmp/download_compliance_profiles.sh",
+      "sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml",
+      "sudo echo -e \"api-token =\" $TOK >> $HOME/automate-credentials.toml",
+      "sudo cat $HOME/automate-credentials.toml",
     ]
   }
+
   provisioner "local-exec" {
     // Clean up local known_hosts in case we get a re-used public IP
     command = "ssh-keygen -R ${aws_instance.chef_automate.public_ip}"
@@ -250,7 +322,7 @@ data "external" "a2_secrets" {
     ssh_user = "${var.platform}"
     ssh_key  = "${var.aws_key_pair_file}"
     a2_ip    = "${aws_instance.chef_automate.public_ip}"
-    chef_user   = "${var.chef_user1}"
-    chef_organization   = "${var.chef_organization}"
+    chef_user   = "${var.chef-user1}"
+    chef_organization   = "${var.chef-organization}"
   }
 }
