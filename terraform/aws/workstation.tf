@@ -55,6 +55,8 @@ resource "aws_instance" "workstation" {
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'client_key               "#{current_dir}/${var.chef_user1}.pem"'
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'chef_server_url          "https://${var.automate_hostname}/organizations/${var.chef_organization}"'
     Add-Content -Path C:\Chef\.chef\config.rb -Value 'cookbook_path            ["#{current_dir}/../cookbooks"]'
+    git config --global user.email "me@chef.io"
+    git config --global user.name "Chef"
     </powershell>
     EOF
 
