@@ -78,6 +78,42 @@ output_information() {
     sudo cat $HOME/automate-credentials.toml
 }
 
+install_chef_workstation() {
+    echo "xxxxx Install Chef Workstation xxxxx"
+    sudo wget https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb
+    sudo dpkg -i chef-workstation_0.17.5-1_amd64.deb
+}
+
+config_workstation() {
+    chef generate repo chef-repo --chef-license accept
+    mkdir -p /home/ubuntu/chef-repo/.chef
+    cp /home/ubuntu/${var_chef_user1}.pem /home/ubuntu/chef-repo/.chef/${var_chef_user1}.pem
+
+    echo 'log_location     STDOUT' >> /home/ubuntu/chef-repo/.chef/config.rb
+    echo -e "chef_server_url 'https://${var_automate_hostname}/organizations/${var_chef_organization}'" >> /home/ubuntu/chef-repo/.chef/config.rb
+    echo -e "validation_client_name '${var_chef_user1}'" >> /home/ubuntu/chef-repo/.chef/config.rb
+    echo -e "validation_key '/home/ubuntu/chef-repo/.chef/${var_chef_user1}.pem'" >> /home/ubuntu/chef-repo/.chef/config.rb
+    echo -e "node_name '${var_chef_user1}'" >> /home/ubuntu/chef-repo/.chef/config.rb
+    echo -e "ssl_verify_mode :verify_none" >> /home/ubuntu/chef-repo/.chef/config.rb
+}
+
+install_cookbooks(){
+    cd /home/ubuntu/chef-repo
+    knife ssl fetch
+    
+    cd /home/ubuntu/chef-repo/cookbooks
+    git clone https://github.com/anthonygrees/audit_agr
+    cd /home/ubuntu/chef-repo/cookbooks/audit_agr
+    berks install
+    berks upload
+
+    cd /home/ubuntu/chef-repo/cookbooks
+    git clone https://github.com/anthonygrees/chef-client
+    cd /home/ubuntu/chef-repo/cookbooks/chef-client
+    berks install
+    berks upload
+}
+
 # TOKEN is somewhat global var
 # created in create_a2_users
 # used in download_compliance_profiles,output_information
@@ -88,4 +124,6 @@ create_a2_users
 create_infra_users
 download_compliance_profiles
 output_information
-
+install_chef_workstation
+config_workstation
+install_cookbooks

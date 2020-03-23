@@ -22,12 +22,12 @@ output "a2_url" {
   value = "${data.external.a2_secrets.result["a2_url"]}"
 }
 
-output "sg" {
+output "a2_sg" {
   value= "${aws_security_group.chef_automate.id}"
 }
-output "subnet_id_a" {
+output "a2_subnet_id_a" {
   value = "${aws_subnet.habmgmt-subnet-a.id}"
 }
-output "subnet_id_b" {
+output "a2_subnet_id_b" {
   value = "${aws_subnet.habmgmt-subnet-b.id}"
 }
