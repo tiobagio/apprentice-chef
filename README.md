@@ -17,7 +17,10 @@ This repo creates a Chef Training Environment to teach Chef Essentials, Introduc
     - Configures Test-Kitchen
     - Configures Knife to communicate with the Chef Server
 
+#### Other Resources
 This environment is made to work with the following training repo - https://github.com/anthonygrees/compliance-workshop
+
+Policyfiles training - https://github.com/anthonygrees/policyfiles_training
 
 
 ### Step 1 - Get Started
@@ -100,6 +103,8 @@ and then apply to create the infrastructure.
 ```bash
 terraform apply -auto-approve
 ```
+
+### What does it create ?
 
 It will create the following servers
 - Ubuntu VM with Chef Automate, Chef Infra Server and Habitat On Prem Builder
