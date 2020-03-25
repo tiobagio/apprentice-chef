@@ -2,7 +2,7 @@
 
 ### About
 This repo creates a Chef Training Environment to teach Chef Essentials, Introduction to Inspec and Habitat Jumpstart.  It creates the following:
-- Chef-Env
+- Chef Environment
     - Chef Automate
       - Loads InSpec Profiles
       - Creates 10 local users for the students
@@ -10,7 +10,7 @@ This repo creates a Chef Training Environment to teach Chef Essentials, Introduc
       - Creates user pem and org validator
     - Habitat OnPrem Builder
 
-- Student-Workstation
+- Student Workstation
   - Windows 2016 Student Workstation(s)
     - Installs VS Code, Git, Cmder, Chrome, Chef Workstation
     - Creates a working directory in `C:\Chef`
@@ -48,39 +48,14 @@ The Local Users for students created at `Workstation-1` thru `Workstation-10` an
 - User: `workstation-1`
 - Password: `workstation!`
 
-#### Create the Chef Training Environment
-```bash
-cd terraform/aws/chef-env
-```
-
-Execute the terraform. First run the initialise to ensure the plugins you need are installed:
-
-```bash
-terraform init
-```
-Before you run Terraform to create your infrastructure, it's a good idea to see what resources it would create. It also helps you verify that Terraform can connect to your AWS account.
-
-```bash
-terraform plan
-```
-
-and then apply to create the infrastructure.
-
-```bash
-terraform apply -auto-approve
-```
-
-Once successfully created, you will get an output like this:
-![TerraformOutput](/images/automate_output.png)
-
-#### Capture the Client and Validator PEM files
+#### The Client and Validator PEM files
 When the Chef Infra Server is created, the User and ORG (validator) pem files are output.  You can also find copies on the server at:
 - User pem file required by Knife - `/home/ubuntu/anthony.pem`
 - Validator pem file required for bootstrapping nodes - `/home/ubuntu/reesyorg-validator.pem`
 
 The PEM files are also `SCP`d to your Laptop.  You can find them at `/Users/<username>/` and their names are:
-- `anthony-<automate-ip>.pem`
-- `reesyorg-validator-<automate-ip>.pem`
+- `<username>-<automate-ip>.pem`
+- `<org>-validator-<automate-ip>.pem`
 
 ### Step 3- Student Workstations
 
@@ -99,14 +74,14 @@ Password - `RL9@T40BTmXh`
 
 #### Set the PEM files
 The two PEM files created by the Chef Server when you ran the `terraform` above have been stored on your Laptop at `/Users/<username>/` and their names are:
-- `anthony-<automate-ip>.pem`
-- `reesyorg-validator-<automate-ip>.pem`
+- `<username>-<automate-ip>.pem`
+- `<org>-validator-<automate-ip>.pem`
 
 These will then be copied to the Student Workstation so that `knife` can connect to the Chef Server.
 
-#### Create the Chef Training Environment
+### Create the Chef Training Environment
 ```bash
-cd terraform/aws/student-workstation
+cd terraform/aws/
 ```
 
 Execute the terraform. First run the initialise to ensure the plugins you need are installed:
@@ -126,8 +101,12 @@ and then apply to create the infrastructure.
 terraform apply -auto-approve
 ```
 
+It will create the following servers
+- Ubuntu VM with Chef Automate, Chef Infra Server and Habitat On Prem Builder
+- Windows Student workstation (1 for each student)
+
 Once successfully created, you will get an output like this:
-![TerraformOutput](/images/student_output.png)
+![TerraformOutput](/images/automate_output.png)
 
 ### Debuging
 

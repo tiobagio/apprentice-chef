@@ -148,19 +148,19 @@ resource "null_resource" "git" {
   }
 }
 
-# resource "null_resource" "browser" {
-#   depends_on = ["null_resource.git"]
-#   provisioner "remote-exec" {
-#     inline = [
-#       "PowerShell.exe -Command \"C:\\PROGRA~2\\Google\\Chrome\\Application\\chrome.exe https://${var.automate_hostname} \"",
-#     ]
-#       connection {
-#         host = "${aws_instance.workstation.public_ip}"
-#         type     = "winrm"
-#         user     = "hab"
-#         password = "ch3fh@b1!"
-#         insecure = true
-#         timeout = "10m"
-#       }
-#   }
-# }
+resource "null_resource" "browser" {
+  depends_on = ["null_resource.git"]
+  provisioner "remote-exec" {
+    inline = [
+      "start \"C:\\PROGRA~2\\Google\\Chrome\\Application\\chrome.exe \" https://${var.automate_hostname} ",
+    ]
+      connection {
+        host = "${aws_instance.workstation.public_ip}"
+        type     = "winrm"
+        user     = "chef"
+        password = "RL9@T40BTmXh"
+        insecure = true
+        timeout = "10m"
+      }
+  }
+}
