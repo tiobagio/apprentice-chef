@@ -252,6 +252,6 @@ data "external" "a2_secrets" {
     a2_ip = aws_instance.chef_automate.public_ip
     chef_user = var.chef_user1
     chef_organization = var.chef_organization
-    location = var.key_path
+    local_path = var.key_path
   }
 }
