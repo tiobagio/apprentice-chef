@@ -28,6 +28,8 @@ tag_contact="myemail@chef.io"
 // Applications Tag
 tag_application=""
 
+key_path="/Users/adrian/apprentice-chef"
+
 ////////////////////////////////
 // Automate Config
 // Chef Automate Hostname
