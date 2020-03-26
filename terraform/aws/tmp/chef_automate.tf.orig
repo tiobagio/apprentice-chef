@@ -3,7 +3,7 @@ resource "aws_security_group" "chef_automate" {
   description = "Chef Automate Server"
   vpc_id      = "${aws_vpc.habmgmt-vpc.id}"
 
-  tags {
+  tags = {
     Name          = "${var.tag_customer}-${var.tag_project}_${random_id.instance_id.hex}_${var.tag_application}_security_group"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
@@ -156,7 +156,7 @@ resource "aws_security_group_rule" "linux_egress_allow_0-65535_all" {
 data "template_file" "install_chef_automate_cli" {
   template = "${file("${path.module}/templates/chef_automate/install_chef_automate_cli.sh.tpl")}"
 
-  vars {
+  vars = {
     channel = "${var.channel}"
   }
 }
@@ -164,7 +164,7 @@ data "template_file" "install_chef_automate_cli" {
 data "template_file" "automate_eas_config" {
   template = "${file("${path.module}/templates/chef_automate/automate-eas-config.toml.tpl")}"
 
-  vars {
+  vars = {
     disable_event_tls = "${var.disable_event_tls}"
   }
 } 
@@ -172,7 +172,7 @@ data "template_file" "automate_eas_config" {
 data "template_file" "download_compliance_profiles" {
   template = "${file("${path.module}/templates/chef_automate/download_compliance_profiles.sh.tpl")}"
 
-  vars {
+  vars = {
     automate_hostname = "${var.automate_hostname}"
   }
 }
@@ -181,7 +181,7 @@ data "template_file" "download_compliance_profiles" {
 data "template_file" "user_data" {
   template = "${file("${path.module}/templates/chef_automate/user_data.sh.tpl")}"
 
-  vars {
+  vars = {
     var_channel = "${var.channel}"
     var_automate_hostname = "${var.automate_hostname}"
     var_automate_custom_ssl = "${var.automate_custom_ssl}"
@@ -212,7 +212,7 @@ resource "aws_instance" "chef_automate" {
     volume_type           = "gp2"
   }
 
-  tags {
+  tags = {
     Name          = "${format("chef_automate_${random_id.instance_id.hex}")}"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"

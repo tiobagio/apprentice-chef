@@ -1,16 +1,16 @@
 resource "aws_security_group" "habworkshop" {
   name        = "habworkshop-${random_id.instance_id.hex}"
   description = "Security group for Habitat workshop for Windows"
-  vpc_id      = "${aws_vpc.habmgmt-vpc.id}"
+  vpc_id      = aws_vpc.habmgmt-vpc.id
 
-  tags {
+  tags = {
     Name          = "${var.tag_customer}-${var.tag_project}-${random_id.instance_id.hex}-${var.tag_application}-security_group"
-    X-Dept        = "${var.tag_dept}"
-    X-Customer    = "${var.tag_customer}"
-    X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}"
-    X-Contact     = "${var.tag_contact}"
-    X-TTL         = "${var.tag_ttl}"
+    X-Dept        = var.tag_dept
+    X-Customer    = var.tag_customer
+    X-Project     = var.tag_project
+    X-Application = var.tag_application
+    X-Contact     = var.tag_contact
+    X-TTL         = var.tag_ttl
   }
 }
 
@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "ingress_rdp_all" {
   to_port           = 3389
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.habworkshop.id}"
+  security_group_id = aws_security_group.habworkshop.id
 }
 
 # WinRM - all
@@ -34,7 +34,7 @@ resource "aws_security_group_rule" "ingress_winrm_all" {
   to_port           = 5986
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.habworkshop.id}"
+  security_group_id = aws_security_group.habworkshop.id
 }
 
 # resource "aws_security_group_rule" "ingress_allow_9631_tcp" {
@@ -43,8 +43,8 @@ resource "aws_security_group_rule" "ingress_winrm_all" {
 #   to_port                  = 9631
 #   protocol                 = "tcp"
 #   cidr_blocks              = ["0.0.0.0/0"]
-#   security_group_id        = "${aws_security_group.habworkshop.id}"
-#   source_security_group_id = "${aws_security_group.habworkshop.id}"
+#   security_group_id        = aws_security_group.habworkshop.id
+#   source_security_group_id = aws_security_group.habworkshop.id
 # }
 
 resource "aws_security_group_rule" "windows_egress_allow_0-65535_all" {
@@ -53,6 +53,6 @@ resource "aws_security_group_rule" "windows_egress_allow_0-65535_all" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.habworkshop.id}"
+  security_group_id = aws_security_group.habworkshop.id
 }
 

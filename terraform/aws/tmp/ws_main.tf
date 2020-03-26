@@ -34,7 +34,7 @@ resource "aws_vpc" "habworkshop-vpc" {
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
 
-  tags {
+  tags = {
     Name          = "${var.tag_contact}-${var.tag_name}-vpc"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
@@ -48,7 +48,7 @@ resource "aws_vpc" "habworkshop-vpc" {
 resource "aws_internet_gateway" "habworkshop-gateway" {
   vpc_id = "${aws_vpc.habworkshop-vpc.id}"
 
-  tags {
+  tags = {
     Name = "${var.tag_contact}-${var.tag_name}-gateway"
   }
 }
@@ -64,7 +64,7 @@ resource "aws_subnet" "habworkshop-subnet" {
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     Name = "${var.tag_contact}-${var.tag_name}-subnet"
   }
 }

@@ -1,5 +1,5 @@
 resource "aws_instance" "workstation" {
-    depends_on = ["aws_instance.chef_automate"]
+    depends_on = [aws_instance.chef_automate]
 
   connection {
     type     = "winrm"
@@ -7,12 +7,12 @@ resource "aws_instance" "workstation" {
     password = "ch3fh@b1!"
   }
 
-  count                       = "${var.count}"
-  ami                         = "${data.aws_ami.windows_workstation.id}"
+  count                       = var.counter
+  ami                         = data.aws_ami.windows_workstation.id
   instance_type               = "t3.large"
-  key_name                    = "${var.aws_key_pair_name}"
-  subnet_id                   = "${aws_subnet.habmgmt-subnet-a.id}"
-  vpc_security_group_ids      = ["${aws_security_group.habworkshop.id}"]
+  key_name                    = var.aws_key_pair_name
+  subnet_id                   = aws_subnet.habmgmt-subnet-a.id
+  vpc_security_group_ids      = [aws_security_group.habworkshop.id]
   associate_public_ip_address = true
   iam_instance_profile = "testKitchenAndKnifeEc2"
 
@@ -59,19 +59,19 @@ resource "aws_instance" "workstation" {
     EOF
 
 
-  tags {
+  tags = {
     Name          = "${var.tag_contact}-workstation-${count.index}"
-    X-Dept        = "${var.tag_dept}"
-    X-Customer    = "${var.tag_customer}"
-    X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}"
-    X-Contact     = "${var.tag_contact}"
-    X-TTL         = "${var.tag_ttl}"
+    X-Dept        = var.tag_dept
+    X-Customer    = var.tag_customer
+    X-Project     = var.tag_project
+    X-Application = var.tag_application
+    X-Contact     = var.tag_contact
+    X-TTL         = var.tag_ttl
   }
 }
 
 resource "null_resource" "wait_for_mins" {
-  depends_on = ["aws_instance.workstation"]
+  depends_on = [aws_instance.workstation]
   ## This sleep is required to allow the Windows machine to be ready to accept the files.
   provisioner "local-exec" {
     command = "sleep 320"
@@ -79,12 +79,13 @@ resource "null_resource" "wait_for_mins" {
 }
 
 resource "null_resource" "key_user" {
-  depends_on = ["null_resource.wait_for_mins"]
+  depends_on = [null_resource.wait_for_mins]
+  count = var.counter
   provisioner "file" {
       source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
       destination = "C:\\Chef\\.chef\\${var.chef_user1}.pem"
       connection {
-        host = "${aws_instance.workstation.public_ip}"
+        host = aws_instance.workstation[count.index].public_ip
         type     = "winrm"
         user     = "hab"
         password = "ch3fh@b1!"
@@ -96,12 +97,13 @@ resource "null_resource" "key_user" {
 }
 
 resource "null_resource" "key_validator" {
-  depends_on = ["null_resource.wait_for_mins"]
+  depends_on = [null_resource.wait_for_mins]
+  count = var.counter
   provisioner "file" {
       source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
       destination = "C:\\Chef\\.chef\\${var.chef_organization}.pem"
       connection {
-          host = "${aws_instance.workstation.public_ip}"
+          host = aws_instance.workstation[count.index].public_ip
           type     = "winrm"
           user     = "hab"
           password = "ch3fh@b1!"
@@ -112,12 +114,13 @@ resource "null_resource" "key_validator" {
 }
 
 resource "null_resource" "key_kitchen" {
-  depends_on = ["null_resource.wait_for_mins"]
+  depends_on = [null_resource.wait_for_mins]
+  count = var.counter
   provisioner "file" {
       source      = "${var.key_path}/src/cookbooks/id_rsa"
       destination = "C:\\Users\\Chef\\.ssh\\id_rsa"
       connection {
-          host = "${aws_instance.workstation.public_ip}"
+          host = aws_instance.workstation[count.index].public_ip
           type     = "winrm"
           user     = "hab"
           password = "ch3fh@b1!"
@@ -128,7 +131,8 @@ resource "null_resource" "key_kitchen" {
 }
 
 resource "null_resource" "git" {
-  depends_on = ["null_resource.key_kitchen"]
+  depends_on = [null_resource.key_kitchen]
+  count = var.counter
   provisioner "remote-exec" {
     inline = [
       "cd C:\\Chef",
@@ -138,7 +142,7 @@ resource "null_resource" "git" {
       "git config --global user.name \"Chef\"",
     ]
       connection {
-        host = "${aws_instance.workstation.public_ip}"
+        host = aws_instance.workstation[count.index].public_ip
         type     = "winrm"
         user     = "chef"
         password = "RL9@T40BTmXh"
@@ -150,12 +154,13 @@ resource "null_resource" "git" {
 
 # resource "null_resource" "browser" {
 #   depends_on = ["null_resource.git"]
+#   count = var.counter
 #   provisioner "remote-exec" {
 #     inline = [
 #       "PowerShell.exe -Command \"C:\\PROGRA~2\\Google\\Chrome\\Application\\chrome.exe https://${var.automate_hostname} \"",
 #     ]
 #       connection {
-#         host = "${aws_instance.workstation.public_ip}"
+#         host = aws_instance.workstation[count.index].public_ip
 #         type     = "winrm"
 #         user     = "hab"
 #         password = "ch3fh@b1!"
