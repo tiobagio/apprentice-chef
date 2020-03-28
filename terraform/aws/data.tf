@@ -1,12 +1,12 @@
 
 terraform {
-  required_version = "~> 0.11.11" // Terraform frequently puts breaking changes into minor and patch version releases. _Always_ hard pin to the latest known and tested working version. Do not trust semantic versioning.
+  required_version = "~> 0.12.24" // Terraform frequently puts breaking changes into minor and patch version releases. _Always_ hard pin to the latest known and tested working version. Do not trust semantic versioning.
 }
 
 provider "aws" {
-  region                  = "${var.aws_region}"
-  profile                 = "${var.aws_profile}"
-  shared_credentials_file = "${var.aws_credentials_file}"
+  region                  = var.aws_region
+  profile                 = var.aws_profile
+  shared_credentials_file = var.aws_credentials_file
 }
 
 

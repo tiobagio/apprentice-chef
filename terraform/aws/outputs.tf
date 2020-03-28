@@ -3,7 +3,7 @@ output "chef_automate_public_ip" {
 }
 
 output "chef_automate_server_public_r53_dns" {
-  value = "${var.automate_hostname}"
+  value = var.automate_hostname
 }
 
 output "a2_admin" {

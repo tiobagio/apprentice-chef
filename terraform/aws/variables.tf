@@ -2,12 +2,13 @@
 // AWS Connection
 
 variable "aws_region" {
-  default="us-east-1"
+  type = string
+  default = "us-west-1"
   description = "aws_region is the AWS region in which we will build instances"
 }
 
 variable "aws_profile" {
-  default="default"
+  default="solutions-architects"
   description = "aws_profile is the profile from your credentials file which we will use to authenticate to the AWS API."
 }
 
@@ -149,7 +150,7 @@ variable "origin" {
 }
 
 variable "chef_users" {
-  type = "list"
+  type = list(string)
   default = ["admin", "automate", "workstation-1"]
 }
 
@@ -174,6 +175,7 @@ variable "chef_organization" {
 // Workstation 
 # variable "a2_ip" {}
 variable "key_path" {}
-variable "count" {
+
+variable "counter" {
     default = "1"
 }
