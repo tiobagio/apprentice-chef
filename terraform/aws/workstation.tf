@@ -136,7 +136,9 @@ resource "null_resource" "chef" {
   provisioner "remote-exec" {
     inline = [
       "cd C:\\Chef",
+      "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $true\"",
       "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
+      "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $false\"",
     ]
       connection {
         host = aws_instance.workstation[count.index].public_ip
@@ -155,26 +157,6 @@ resource "null_resource" "chef-repo" {
   provisioner "remote-exec" {
     inline = [
       "chef generate repo chef-repo --chef-license accept",
-    ]
-      connection {
-        host = aws_instance.workstation[count.index].public_ip
-        type     = "winrm"
-        user     = "chef"
-        password = "RL9@T40BTmXh"
-        insecure = true
-        timeout = "10m"
-      }
-  }
-}
-
-resource "null_resource" "git" {
-  depends_on = [null_resource.chef-repo]
-  count = var.counter
-  provisioner "remote-exec" {
-    inline = [
-      "cd C:\\Chef",
-      "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
-      "chef generate repo chef-repo --chef-license accept",
       "git config --global user.email \"me@chef.io\"",
       "git config --global user.name \"Chef\"",
     ]
@@ -188,6 +170,26 @@ resource "null_resource" "git" {
       }
   }
 }
+
+# resource "null_resource" "git" {
+#   depends_on = [null_resource.chef-repo]
+#   count = var.counter
+#   provisioner "remote-exec" {
+#     inline = [
+#       "cd C:\\Chef",
+#       "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
+
+#     ]
+#       connection {
+#         host = aws_instance.workstation[count.index].public_ip
+#         type     = "winrm"
+#         user     = "chef"
+#         password = "RL9@T40BTmXh"
+#         insecure = true
+#         timeout = "10m"
+#       }
+#   }
+# }
 
 # resource "null_resource" "browser" {
 #   depends_on = ["null_resource.git"]
