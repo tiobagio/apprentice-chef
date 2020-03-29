@@ -138,6 +138,9 @@ resource "null_resource" "chef" {
       "cd C:\\Chef",
       "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $true\"",
       "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
+      "choco upgrade googlechrome -y",
+      "choco install setdefaultbrowser -y",
+      "SetDefaultBrowser.exe HKLM \"Google Chrome\"",
       "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $false\"",
     ]
       connection {
@@ -171,40 +174,19 @@ resource "null_resource" "chef-repo" {
   }
 }
 
-# resource "null_resource" "git" {
-#   depends_on = [null_resource.chef-repo]
-#   count = var.counter
-#   provisioner "remote-exec" {
-#     inline = [
-#       "cd C:\\Chef",
-#       "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
-
-#     ]
-#       connection {
-#         host = aws_instance.workstation[count.index].public_ip
-#         type     = "winrm"
-#         user     = "chef"
-#         password = "RL9@T40BTmXh"
-#         insecure = true
-#         timeout = "10m"
-#       }
-#   }
-# }
-
-# resource "null_resource" "browser" {
-#   depends_on = ["null_resource.git"]
-#   count = var.counter
-#   provisioner "remote-exec" {
-#     inline = [
-#       "PowerShell.exe -Command \"C:\\PROGRA~2\\Google\\Chrome\\Application\\chrome.exe https://${var.automate_hostname} \"",
-#     ]
-#       connection {
-#         host = aws_instance.workstation[count.index].public_ip
-#         type     = "winrm"
-#         user     = "hab"
-#         password = "ch3fh@b1!"
-#         insecure = true
-#         timeout = "10m"
-#       }
-#   }
-# }
+resource "null_resource" "open_a2" {
+  depends_on = [null_resource.chef-repo]
+  count = var.counter
+  provisioner "file" {
+    content      = templatefile("${path.module}/templates/open_a2.cmd.tpl", { var_automate_hostname = var.automate_hostname })
+    destination = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\open_a2.cmd"
+      connection {
+          host = aws_instance.workstation[count.index].public_ip
+          type     = "winrm"
+          user     = "chef"
+          password = "RL9@T40BTmXh"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}

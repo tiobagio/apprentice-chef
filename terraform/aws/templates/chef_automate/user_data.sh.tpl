@@ -74,7 +74,7 @@ output_information() {
     sudo cat $HOME/${var_chef_organization}-validator.pem
  
     sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml 
-    sudo echo -e \"api-token =\" $TOKEN >> $HOME/automate-credentials.toml
+    sudo echo -e api-token = \"$TOKEN\" >> $HOME/automate-credentials.toml
     sudo cat $HOME/automate-credentials.toml
 }
 
