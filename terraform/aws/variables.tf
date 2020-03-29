@@ -174,8 +174,11 @@ variable "chef_organization" {
 ////////////////////////////////
 // Workstation 
 # variable "a2_ip" {}
-variable "key_path" {}
+variable "key_path" {
+  description = "The PEM key that students will use on AWS for Kitchen to connect to instances"
+}
 
 variable "counter" {
     default = "1"
+    description = "The number of Workstations to spin up - 1 per student"
 }

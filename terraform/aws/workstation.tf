@@ -130,8 +130,45 @@ resource "null_resource" "key_kitchen" {
   }
 }
 
-resource "null_resource" "git" {
+resource "null_resource" "chef" {
   depends_on = [null_resource.key_kitchen]
+  count = var.counter
+  provisioner "remote-exec" {
+    inline = [
+      "cd C:\\Chef",
+      "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
+    ]
+      connection {
+        host = aws_instance.workstation[count.index].public_ip
+        type     = "winrm"
+        user     = "chef"
+        password = "RL9@T40BTmXh"
+        insecure = true
+        timeout = "10m"
+      }
+  }
+}
+
+resource "null_resource" "chef-repo" {
+  depends_on = [null_resource.chef]
+  count = var.counter
+  provisioner "remote-exec" {
+    inline = [
+      "chef generate repo chef-repo --chef-license accept",
+    ]
+      connection {
+        host = aws_instance.workstation[count.index].public_ip
+        type     = "winrm"
+        user     = "chef"
+        password = "RL9@T40BTmXh"
+        insecure = true
+        timeout = "10m"
+      }
+  }
+}
+
+resource "null_resource" "git" {
+  depends_on = [null_resource.chef-repo]
   count = var.counter
   provisioner "remote-exec" {
     inline = [
