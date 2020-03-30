@@ -61,60 +61,8 @@ resource "null_resource" "wait_for_mins" {
   }
 }
 
-resource "null_resource" "key_user" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "file" {
-      source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
-      destination = "C:\\Chef\\.chef\\${var.chef_user1}.pem"
-      connection {
-        host = aws_instance.workstation[count.index].public_ip
-        type     = "winrm"
-        user     = "hab"
-        password = "ch3fh@b1!"
-        insecure = true
-        timeout = "10m"
-      }
-  }
-
-}
-
-resource "null_resource" "key_validator" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "file" {
-      source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
-      destination = "C:\\Chef\\.chef\\${var.chef_organization}.pem"
-      connection {
-          host = aws_instance.workstation[count.index].public_ip
-          type     = "winrm"
-          user     = "hab"
-          password = "ch3fh@b1!"
-          insecure = true
-          timeout = "10m"
-        }
-  }
-}
-
-resource "null_resource" "key_kitchen" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "file" {
-      source      = "${var.key_path}/src/cookbooks/id_rsa"
-      destination = "C:\\Users\\Chef\\.ssh\\id_rsa"
-      connection {
-          host = aws_instance.workstation[count.index].public_ip
-          type     = "winrm"
-          user     = "hab"
-          password = "ch3fh@b1!"
-          insecure = true
-          timeout = "10m"
-        }
-  }
-}
-
 resource "null_resource" "chef" {
-  depends_on = [null_resource.key_kitchen]
+  depends_on = [null_resource.wait_for_mins]
   count = var.counter
   provisioner "remote-exec" {
     inline = [
@@ -146,6 +94,11 @@ resource "null_resource" "chef1" {
       "choco upgrade googlechrome -y",
       "choco install setdefaultbrowser -y",
       "SetDefaultBrowser.exe HKLM \"Google Chrome\"",
+      "cd C:\\",
+      "chef generate repo chef-repo --chef-license accept",
+      "git config --global user.email \"me@chef.io\"",
+      "git config --global user.name \"Chef\"",
+      "md C:\\chef-repo\\.chef",
       "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $false\"",
     ]
       connection {
@@ -159,38 +112,77 @@ resource "null_resource" "chef1" {
   }
 }
 
-resource "null_resource" "chef-repo" {
+resource "null_resource" "key_user" {
   depends_on = [null_resource.chef1]
   count = var.counter
-  provisioner "remote-exec" {
-    inline = [
-      "cd C:\\",
-      "chef generate repo chef-repo --chef-license accept",
-      "git config --global user.email \"me@chef.io\"",
-      "git config --global user.name \"Chef\"",
-      "md C:\\chef-repo\\.chef",
-      "PowerShell.exe -Command \"New-Item -Path C:\\chef-repo\\.chef\\ -Name \"config.rb\" -ItemType \"file\" -Value \" \"\"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'current_dir = File.dirname(__FILE__)'\"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'log_level                :info'\"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'log_location             STDOUT'\"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'node_name                \"${var.chef_user1}\"'\"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'client_key               \"#{current_dir}/${var.chef_user1}.pem\"' \"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'chef_server_url          \"https://${var.automate_hostname}/organizations/${var.chef_organization}\"' \"",
-      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'cookbook_path            [\"#{current_dir}/../cookbooks\"]' \"",
-    ]
+  provisioner "file" {
+      source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
+      destination = "C:\\chef-repo\\.chef\\${var.chef_user1}.pem"
       connection {
+        host = aws_instance.workstation[count.index].public_ip
+        type     = "winrm"
+        user     = "hab"
+        password = "ch3fh@b1!"
+        insecure = true
+        timeout = "10m"
+      }
+  }
+
+}
+
+resource "null_resource" "key_validator" {
+  depends_on = [null_resource.chef1]
+  count = var.counter
+  provisioner "file" {
+      source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
+      destination = "C:\\chef-repo\\.chef\\${var.chef_organization}.pem"
+      connection {
+          host = aws_instance.workstation[count.index].public_ip
+          type     = "winrm"
+          user     = "hab"
+          password = "ch3fh@b1!"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+
+resource "null_resource" "key_kitchen" {
+  depends_on = [null_resource.chef1]
+  count = var.counter
+  provisioner "file" {
+      source      = "${var.key_path}/src/cookbooks/id_rsa"
+      destination = "C:\\Users\\Chef\\.ssh\\id_rsa"
+      connection {
+          host = aws_instance.workstation[count.index].public_ip
+          type     = "winrm"
+          user     = "hab"
+          password = "ch3fh@b1!"
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+
+resource "null_resource" "copy_config_rb" {
+  depends_on = [null_resource.key_kitchen]
+  count = var.counter
+  provisioner "file" {
+    content      = templatefile("${path.module}/templates/config_rb.tpl", { var_chef_user1 = var.chef_user1, var_automate_hostname = var.automate_hostname, var_chef_organization = var.chef_organization })
+    destination = "C:\\chef-repo\\.chef\\config.rb"
+    connection {
         host = aws_instance.workstation[count.index].public_ip
         type     = "winrm"
         user     = "chef"
         password = "RL9@T40BTmXh"
         insecure = true
         timeout = "10m"
-      }
+    }
   }
 }
 
 resource "null_resource" "open_a2" {
-  depends_on = [null_resource.chef-repo]
+  depends_on = [null_resource.copy_config_rb]
   count = var.counter
   provisioner "file" {
     content      = templatefile("${path.module}/templates/open_a2.cmd.tpl", { var_automate_hostname = var.automate_hostname })
