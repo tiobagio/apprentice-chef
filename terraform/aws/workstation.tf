@@ -25,6 +25,8 @@ resource "aws_instance" "workstation" {
 
     user_data = <<EOF
     <powershell>
+    net user chef RL9@T40BTmXh /add /y
+    net localgroup administrators chef /add
     winrm quickconfig -q
     winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="1024"}'
     winrm set winrm/config '@{MaxTimeoutms="1800000"}'
@@ -36,13 +38,6 @@ resource "aws_instance" "workstation" {
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
-    net user chef RL9@T40BTmXh /add /y
-    net localgroup administrators chef /add
-    choco install googlechrome -y
-    choco install vscode -y
-    choco install cmder -y
-    choco install git -y
-    choco install notepad++ -y
     </powershell>
     EOF
 
@@ -143,6 +138,11 @@ resource "null_resource" "chef1" {
   count = var.counter
   provisioner "remote-exec" {
     inline = [
+      "choco install googlechrome -y",
+      "choco install vscode -y",
+      "choco install cmder -y",
+      "choco install git -y",
+      "choco install notepad++ -y",
       "choco upgrade googlechrome -y",
       "choco install setdefaultbrowser -y",
       "SetDefaultBrowser.exe HKLM \"Google Chrome\"",
@@ -169,14 +169,14 @@ resource "null_resource" "chef-repo" {
       "git config --global user.email \"me@chef.io\"",
       "git config --global user.name \"Chef\"",
       "md C:\\chef-repo\\.chef",
-      "New-Item -Path C:\\chef-repo\\.chef\\ -Name \"config.rb\" -ItemType \"file\" -Value \" \"",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'current_dir = File.dirname(__FILE__)'",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'log_level                :info'",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'log_location             STDOUT'",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'node_name                \"${var.chef_user1}\"'",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'client_key               \"#{current_dir}/${var.chef_user1}.pem\"' ",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'chef_server_url          \"https://${var.automate_hostname}/organizations/${var.chef_organization}\"' ",
-      "Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'cookbook_path            [\"#{current_dir}/../cookbooks\"]' ",
+      "PowerShell.exe -Command \"New-Item -Path C:\\chef-repo\\.chef\\ -Name \"config.rb\" -ItemType \"file\" -Value \" \"\"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'current_dir = File.dirname(__FILE__)'\"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'log_level                :info'\"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'log_location             STDOUT'\"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'node_name                \"${var.chef_user1}\"'\"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'client_key               \"#{current_dir}/${var.chef_user1}.pem\"' \"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'chef_server_url          \"https://${var.automate_hostname}/organizations/${var.chef_organization}\"' \"",
+      "PowerShell.exe -Command \"Add-Content -Path C:\\chef-repo\\.chef\\config.rb -Value 'cookbook_path            [\"#{current_dir}/../cookbooks\"]' \"",
     ]
       connection {
         host = aws_instance.workstation[count.index].public_ip
