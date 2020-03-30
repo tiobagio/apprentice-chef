@@ -1,0 +1,2101 @@
+{
+  "version": 4,
+  "terraform_version": "0.12.24",
+  "serial": 218,
+  "lineage": "9fac1713-2073-ab64-7d26-df2884c7905d",
+  "outputs": {
+    "a2_admin": {
+      "value": "admin",
+      "type": "string"
+    },
+    "a2_admin_password": {
+      "value": "6dff95d6848078d948ff97fa1a46f1a4",
+      "type": "string"
+    },
+    "a2_sg": {
+      "value": "sg-0ef08c86a8da7607f",
+      "type": "string"
+    },
+    "a2_subnet_id_a": {
+      "value": "subnet-0c9734c5d4c7af7ca",
+      "type": "string"
+    },
+    "a2_subnet_id_b": {
+      "value": "subnet-0470145eb36f414f6",
+      "type": "string"
+    },
+    "a2_token": {
+      "value": "rgoVpjwMoRsU7jz8XGkYZuldhqE=",
+      "type": "string"
+    },
+    "a2_url": {
+      "value": "https://anthony-a2.chef-demo.com",
+      "type": "string"
+    },
+    "chef_automate_public_ip": {
+      "value": "18.237.113.205",
+      "type": "string"
+    },
+    "chef_automate_server_public_r53_dns": {
+      "value": "anthony-a2.chef-demo.com",
+      "type": "string"
+    },
+    "workstation_public_ips": {
+      "value": [
+        [
+          "34.215.253.219"
+        ]
+      ],
+      "type": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              "string"
+            ]
+          ]
+        ]
+      ]
+    },
+    "workstation_security-group": {
+      "value": [
+        "sg-04faf9d6151700b6b"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string"
+        ]
+      ]
+    },
+    "workstation_subnet_id": {
+      "value": "subnet-0c9734c5d4c7af7ca",
+      "type": "string"
+    },
+    "workstation_vpc_id": {
+      "value": "vpc-097251fdfc5061b5b",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "aws_acm_certificate",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:acm:us-west-2:496323866215:certificate/1ca6e53c-5b80-4292-a42b-5123c84c2051",
+            "domain": "*.chef-demo.com",
+            "id": "2020-03-29 22:27:42.724395 +0000 UTC",
+            "key_types": null,
+            "most_recent": true,
+            "statuses": [
+              "ISSUED"
+            ],
+            "types": null
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_ami",
+      "name": "centos7",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architecture": "x86_64",
+            "block_device_mappings": [
+              {
+                "device_name": "/dev/sda1",
+                "ebs": {
+                  "delete_on_termination": "false",
+                  "encrypted": "false",
+                  "iops": "0",
+                  "snapshot_id": "snap-0a2c52e002561a1ad",
+                  "volume_size": "8",
+                  "volume_type": "gp2"
+                },
+                "no_device": "",
+                "virtual_name": ""
+              },
+              {
+                "device_name": "/dev/sdb",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral0"
+              },
+              {
+                "device_name": "/dev/sdc",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral1"
+              }
+            ],
+            "creation_date": "2019-10-07T23:32:31.000Z",
+            "description": "High Performance Image for CentOS 7, by Chef. Includes docker, ChefDK, Puppet, AWS SSM Agent, and latest security patches.  https://github.com/irvingpop/packer-chef-highperf-centos7-ami",
+            "executable_users": null,
+            "filter": [
+              {
+                "name": "name",
+                "values": [
+                  "chef-highperf-centos7-*"
+                ]
+              },
+              {
+                "name": "virtualization-type",
+                "values": [
+                  "hvm"
+                ]
+              }
+            ],
+            "hypervisor": "xen",
+            "id": "ami-0d280b33e51a94243",
+            "image_id": "ami-0d280b33e51a94243",
+            "image_location": "446539779517/chef-highperf-centos7-201910072320",
+            "image_owner_alias": null,
+            "image_type": "machine",
+            "kernel_id": null,
+            "most_recent": true,
+            "name": "chef-highperf-centos7-201910072320",
+            "name_regex": null,
+            "owner_id": "446539779517",
+            "owners": [
+              "446539779517"
+            ],
+            "platform": null,
+            "product_codes": [],
+            "public": true,
+            "ramdisk_id": null,
+            "root_device_name": "/dev/sda1",
+            "root_device_type": "ebs",
+            "root_snapshot_id": "snap-0a2c52e002561a1ad",
+            "sriov_net_support": "simple",
+            "state": "available",
+            "state_reason": {
+              "code": "UNSET",
+              "message": "UNSET"
+            },
+            "tags": {},
+            "virtualization_type": "hvm"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_ami",
+      "name": "ubuntu",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architecture": "x86_64",
+            "block_device_mappings": [
+              {
+                "device_name": "/dev/sda1",
+                "ebs": {
+                  "delete_on_termination": "true",
+                  "encrypted": "false",
+                  "iops": "0",
+                  "snapshot_id": "snap-0225dd4d40c7306ca",
+                  "volume_size": "8",
+                  "volume_type": "gp2"
+                },
+                "no_device": "",
+                "virtual_name": ""
+              },
+              {
+                "device_name": "/dev/sdb",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral0"
+              },
+              {
+                "device_name": "/dev/sdc",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral1"
+              }
+            ],
+            "creation_date": "2020-03-24T20:56:38.000Z",
+            "description": "Canonical, Ubuntu, 18.04 LTS, amd64 bionic image build on 2020-03-23",
+            "executable_users": null,
+            "filter": [
+              {
+                "name": "name",
+                "values": [
+                  "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
+                ]
+              },
+              {
+                "name": "virtualization-type",
+                "values": [
+                  "hvm"
+                ]
+              }
+            ],
+            "hypervisor": "xen",
+            "id": "ami-0e23ea41be77feacd",
+            "image_id": "ami-0e23ea41be77feacd",
+            "image_location": "099720109477/ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200323",
+            "image_owner_alias": null,
+            "image_type": "machine",
+            "kernel_id": null,
+            "most_recent": true,
+            "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200323",
+            "name_regex": null,
+            "owner_id": "099720109477",
+            "owners": [
+              "099720109477"
+            ],
+            "platform": null,
+            "product_codes": [],
+            "public": true,
+            "ramdisk_id": null,
+            "root_device_name": "/dev/sda1",
+            "root_device_type": "ebs",
+            "root_snapshot_id": "snap-0225dd4d40c7306ca",
+            "sriov_net_support": "simple",
+            "state": "available",
+            "state_reason": {
+              "code": "UNSET",
+              "message": "UNSET"
+            },
+            "tags": {},
+            "virtualization_type": "hvm"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_ami",
+      "name": "ubuntu16",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architecture": "x86_64",
+            "block_device_mappings": [
+              {
+                "device_name": "/dev/sda1",
+                "ebs": {
+                  "delete_on_termination": "true",
+                  "encrypted": "false",
+                  "iops": "0",
+                  "snapshot_id": "snap-03150f8acf71622eb",
+                  "volume_size": "8",
+                  "volume_type": "gp2"
+                },
+                "no_device": "",
+                "virtual_name": ""
+              },
+              {
+                "device_name": "/dev/sdb",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral0"
+              },
+              {
+                "device_name": "/dev/sdc",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral1"
+              }
+            ],
+            "creation_date": "2020-03-17T20:37:57.000Z",
+            "description": "Canonical, Ubuntu, 16.04 LTS, amd64 xenial image build on 2020-03-17",
+            "executable_users": null,
+            "filter": [
+              {
+                "name": "name",
+                "values": [
+                  "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+                ]
+              },
+              {
+                "name": "virtualization-type",
+                "values": [
+                  "hvm"
+                ]
+              }
+            ],
+            "hypervisor": "xen",
+            "id": "ami-02e30ba14d8ffa6e6",
+            "image_id": "ami-02e30ba14d8ffa6e6",
+            "image_location": "099720109477/ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20200317",
+            "image_owner_alias": null,
+            "image_type": "machine",
+            "kernel_id": null,
+            "most_recent": true,
+            "name": "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20200317",
+            "name_regex": null,
+            "owner_id": "099720109477",
+            "owners": [
+              "099720109477"
+            ],
+            "platform": null,
+            "product_codes": [],
+            "public": true,
+            "ramdisk_id": null,
+            "root_device_name": "/dev/sda1",
+            "root_device_type": "ebs",
+            "root_snapshot_id": "snap-03150f8acf71622eb",
+            "sriov_net_support": "simple",
+            "state": "available",
+            "state_reason": {
+              "code": "UNSET",
+              "message": "UNSET"
+            },
+            "tags": {},
+            "virtualization_type": "hvm"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_ami",
+      "name": "windows_workstation",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architecture": "x86_64",
+            "block_device_mappings": [
+              {
+                "device_name": "/dev/sda1",
+                "ebs": {
+                  "delete_on_termination": "true",
+                  "encrypted": "false",
+                  "iops": "0",
+                  "snapshot_id": "snap-0e2dfbedb147a525f",
+                  "volume_size": "100",
+                  "volume_type": "gp2"
+                },
+                "no_device": "",
+                "virtual_name": ""
+              }
+            ],
+            "creation_date": "2020-03-29T13:56:03.000Z",
+            "description": "windows_2016_habitat_workstation",
+            "executable_users": null,
+            "filter": [
+              {
+                "name": "name",
+                "values": [
+                  "windows_2016_habitat_workstation_*"
+                ]
+              },
+              {
+                "name": "virtualization-type",
+                "values": [
+                  "hvm"
+                ]
+              }
+            ],
+            "hypervisor": "xen",
+            "id": "ami-0829d7f19db0f2b10",
+            "image_id": "ami-0829d7f19db0f2b10",
+            "image_location": "496323866215/windows_2016_habitat_workstation_1",
+            "image_owner_alias": null,
+            "image_type": "machine",
+            "kernel_id": null,
+            "most_recent": true,
+            "name": "windows_2016_habitat_workstation_1",
+            "name_regex": null,
+            "owner_id": "496323866215",
+            "owners": [
+              "496323866215"
+            ],
+            "platform": "windows",
+            "product_codes": [],
+            "public": false,
+            "ramdisk_id": null,
+            "root_device_name": "/dev/sda1",
+            "root_device_type": "ebs",
+            "root_snapshot_id": "snap-0e2dfbedb147a525f",
+            "sriov_net_support": "simple",
+            "state": "available",
+            "state_reason": {
+              "code": "UNSET",
+              "message": "UNSET"
+            },
+            "tags": {},
+            "virtualization_type": "hvm"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_route53_zone",
+      "name": "selected",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "caller_reference": "7EA7860F-0505-FC4F-B5B1-7178043F4E6A",
+            "comment": "TLD for SA-owned and delivered demo environments",
+            "id": "Z2GLGMM0F862K7",
+            "name": "chef-demo.com.",
+            "name_servers": [
+              "ns-604.awsdns-11.net",
+              "ns-1387.awsdns-45.org",
+              "ns-394.awsdns-49.com",
+              "ns-1723.awsdns-23.co.uk"
+            ],
+            "private_zone": false,
+            "resource_record_set_count": 94,
+            "tags": null,
+            "vpc_id": null,
+            "zone_id": "Z2GLGMM0F862K7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "external",
+      "name": "a2_secrets",
+      "provider": "provider.external",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "-",
+            "program": [
+              "bash",
+              "./data-sources/get-automate-secrets.sh"
+            ],
+            "query": {
+              "a2_ip": "18.237.113.205",
+              "chef_organization": "reesyorg",
+              "chef_user": "anthony",
+              "local_path": "/Users/anthonyrees",
+              "ssh_key": "/Users/anthonyrees/src/cookbooks/anthonyrees_sa_aws.pem",
+              "ssh_user": "ubuntu"
+            },
+            "result": {
+              "a2_admin": "admin",
+              "a2_password": "6dff95d6848078d948ff97fa1a46f1a4",
+              "a2_token": "rgoVpjwMoRsU7jz8XGkYZuldhqE=",
+              "a2_url": "https://anthony-a2.chef-demo.com"
+            },
+            "working_dir": null
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "template_file",
+      "name": "automate_eas_config",
+      "provider": "provider.template",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "filename": null,
+            "id": "2a0efdb7cb779a2921fb8e82f44f0646f39a497000a123d1c25046e26fd56091",
+            "rendered": "[event_gateway]\n  [event_gateway.v1]\n    [event_gateway.v1.sys]\n      [event_gateway.v1.sys.service]\n        disable_frontend_tls = true\n",
+            "template": "[event_gateway]\n  [event_gateway.v1]\n    [event_gateway.v1.sys]\n      [event_gateway.v1.sys.service]\n        disable_frontend_tls = ${disable_event_tls}\n",
+            "vars": {
+              "disable_event_tls": "true"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "template_file",
+      "name": "user_data",
+      "provider": "provider.template",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "filename": null,
+            "id": "336101119a665033e179ce37cb88f27669312bd6ca2787aeeef4737e7fecec8e",
+            "rendered": "# Download profiles for Audit cookbook\n\ndownload_compliance_profiles() {\n    for PROFILE in \\\n        linux-baseline \\\n        cis-centos7-level1 \\\n        cis-ubuntu16.04lts-level1-server \\\n        windows-baseline \\\n        cis-windows2012r2-level1-memberserver \\\n        cis-windows2016-level1-memberserver \\\n        cis-windows2016rtm-release1607-level1-memberserver \\\n        cis-rhel7-level1-server \\\n        cis-sles11-level1 \n    do \n        echo \"$PROFILE\" \n        VERSION=`curl -s -k -H \"api-token: $TOKEN\" https://anthony-a2.chef-demo.com/api/v0/compliance/profiles/search  -d \"{\\\"name\\\":\\\"$PROFILE\\\"}\" | /snap/bin/jq -r .profiles[0].version`\n\n        echo \"Version:  $VERSION\" \n        curl -s -k -H \"api-token: $TOKEN\" -H \"Content-Type: application/json\" 'https://anthony-a2.chef-demo.com/api/v0/compliance/profiles?owner=admin' \\\n            -d  \"{\\\"name\\\":\\\"$PROFILE\\\",\\\"version\\\":\\\"$VERSION\\\"}\"\n        echo\n        echo\n    done\n}\n\n\ninstall_a2() { \n    sudo snap install jq\n    sudo hostnamectl set-hostname anthony-a2.chef-demo.com \n    sudo sysctl -w vm.max_map_count=262144 \n    sudo sysctl -w vm.dirty_expire_centisecs=20000\n    sudo mkdir -p /etc/chef-automate \n    curl https://packages.chef.io/files/current/latest/chef-automate-cli/chef-automate_linux_amd64.zip |gunzip - \u003e chef-automate \u0026\u0026 chmod +x chef-automate\n#      \"sudo chmod +x /tmp/install_chef_automate_cli.sh\",\n#      \"sudo bash /tmp/install_chef_automate_cli.sh\", \n    sudo ./chef-automate init-config --file /tmp/config.toml $(if false; then echo '--certificate /tmp/ssl_cert --private-key /tmp/ssl_key'; fi)\n    sudo sed -i 's/fqdn = \\\".*\\\"/fqdn = \\\"anthony-a2.chef-demo.com\\\"/g' /tmp/config.toml\n    sudo sed -i 's/channel = \\\".*\\\"/channel = \\\"current\\\"/g' /tmp/config.toml\n    sudo sed -i 's/license = \\\".*\\\"/license = \\\"eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YjEzNDc4LTdhNzktNDZmZS1iOTI5LTg5NDFjZGNlNzU0OSIsInZlcnNpb24iOiIxIiwidHlwZSI6ImNvbW1lcmNpYWwiLCJnZW5lcmF0b3IiOiJjaGVmL2xpY2Vuc2UtMi4wLjAiLCJrZXlfc2hhMjU2IjoiZTBkZjI4YzhiYzY4MTUwZWRiZmVmOThjZDZiN2RjNDM5YzFmODBjN2U3ZWY3NDc4OTNhNjg5M2EyZjdiNjBmNyIsImdlbmVyYXRpb25fZGF0ZSI6eyJzZWNvbmRzIjoxNTYxNzU5OTg2fSwiY3VzdG9tZXIiOiJIb25leXdlbGwgLSBJbmRpYSIsImN1c3RvbWVyX2lkIjoiMDA2ODAwMDAwMUFlQlJEQUEzIiwiY3VzdG9tZXJfaWRfdmVyc2lvbiI6IjEiLCJlbnRpdGxlbWVudHMiOlt7Im5hbWUiOiJIb25leXdlbGwgLSBJbmRpYSBSZW5ld2FsIDE1MDAwIE5vZGVzIiwibWVhc3VyZSI6Im5vZGVzIiwibGltaXQiOi0xLCJzdGFydCI6eyJzZWNvbmRzIjoxNTYxOTM5MjAwfSwiZW5kIjp7InNlY29uZHMiOjE1OTM1NjE1OTl9fV19.AOhUUsOPALWnYa6pJ1b1RqvwSfw6ffrxUhvoTjx5t1jkdXOYoS1D4wkFU2t9-q-feLc8oU43Q1PgKqW72yRz8s9qAWL8srplLAoJZ7krHUOIgepxE-qJLjYEB0VUdmU6hry9vv7kVOLVQ7sqyw_ckOYAuuySgTfIUw0Be1Nx29Nu_WSH\\\"/g' /tmp/config.toml\n#     \"sudo rm -f /tmp/ssl_cert /tmp/ssl_key\",\n\n    sudo mv /tmp/config.toml /etc/chef-automate/config.toml \n    sudo ./chef-automate deploy /etc/chef-automate/config.toml --product automate --product chef-server --product builder --accept-terms-and-mlsa\n#      \"sudo ./chef-automate applications enable\", \n\n#    sudo ./chef-automate config patch /tmp/automate-eas-config.toml\n}\n\n\ncreate_infra_users() { \n    sudo chef-server-ctl user-create anthony chef user anthony@chef.io '1234chefabcd' --filename $HOME/anthony.pem\n    sudo chef-server-ctl org-create reesyorg 'automate' --association_user anthony  --filename $HOME/reesyorg-validator.pem\n}\n\n\ncreate_a2_users() {\n    echo \"xxxxx Add Automate Users xxxxx\"\n    export TOKEN=`sudo chef-automate admin-token`\n    echo $TOKEN\n    for i in {1..10}\n    do\n        USERNAME=\"workstation-$i\"\n        echo \"creating user $USERNAME\"\n\tcurl -k -H \"api-token: $TOKEN\" -H \"Content-Type: application/json\" https://anthony-a2.chef-demo.com/api/v0/auth/users?pretty \\\n        --data \"{\\\"name\\\":\\\"$USERNAME\\\", \\\"username\\\":\\\"$USERNAME\\\", \\\"password\\\":\\\"workstation!\\\"}\"\n    done\n}\n\noutput_information() {\n    echo \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Client PEM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" \n    sudo cat $HOME/anthony.pem\n    echo\n    echo \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Validator PEM xxxxxxxxxxxxxxxxxxxxxxxxxxxx\" \n    sudo cat $HOME/reesyorg-validator.pem\n \n    sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml \n    sudo echo -e api-token = \\\"$TOKEN\\\" \u003e\u003e $HOME/automate-credentials.toml\n    sudo cat $HOME/automate-credentials.toml\n}\n\ninstall_chef_workstation() {\n    echo \"xxxxx Install Chef Workstation xxxxx\"\n    sudo wget https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb\n    sudo dpkg -i chef-workstation_0.17.5-1_amd64.deb\n}\n\nconfig_workstation() {\n    chef generate repo chef-repo --chef-license accept\n    mkdir -p /home/ubuntu/chef-repo/.chef\n    cp /home/ubuntu/anthony.pem /home/ubuntu/chef-repo/.chef/anthony.pem\n\n    echo 'log_location     STDOUT' \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"chef_server_url 'https://anthony-a2.chef-demo.com/organizations/reesyorg'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"validation_client_name 'anthony'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"validation_key '/home/ubuntu/chef-repo/.chef/anthony.pem'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"node_name 'anthony'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"ssl_verify_mode :verify_none\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n}\n\ninstall_cookbooks(){\n    cd /home/ubuntu/chef-repo\n    knife ssl fetch\n    \n    cd /home/ubuntu/chef-repo/cookbooks\n    git clone https://github.com/anthonygrees/audit_agr\n    cd /home/ubuntu/chef-repo/cookbooks/audit_agr\n    berks install\n    berks upload\n\n    cd /home/ubuntu/chef-repo/cookbooks\n    git clone https://github.com/anthonygrees/chef-client\n    cd /home/ubuntu/chef-repo/cookbooks/chef-client\n    berks install\n    berks upload\n}\n\n# TOKEN is somewhat global var\n# created in create_a2_users\n# used in download_compliance_profiles,output_information\n# \ninstall_a2\nsleep 60\ncreate_a2_users\ncreate_infra_users\ndownload_compliance_profiles\noutput_information\ninstall_chef_workstation\nconfig_workstation\ninstall_cookbooks\n",
+            "template": "# Download profiles for Audit cookbook\n\ndownload_compliance_profiles() {\n    for PROFILE in \\\n        linux-baseline \\\n        cis-centos7-level1 \\\n        cis-ubuntu16.04lts-level1-server \\\n        windows-baseline \\\n        cis-windows2012r2-level1-memberserver \\\n        cis-windows2016-level1-memberserver \\\n        cis-windows2016rtm-release1607-level1-memberserver \\\n        cis-rhel7-level1-server \\\n        cis-sles11-level1 \n    do \n        echo \"$PROFILE\" \n        VERSION=`curl -s -k -H \"api-token: $TOKEN\" https://${var_automate_hostname}/api/v0/compliance/profiles/search  -d \"{\\\"name\\\":\\\"$PROFILE\\\"}\" | /snap/bin/jq -r .profiles[0].version`\n\n        echo \"Version:  $VERSION\" \n        curl -s -k -H \"api-token: $TOKEN\" -H \"Content-Type: application/json\" 'https://${var_automate_hostname}/api/v0/compliance/profiles?owner=admin' \\\n            -d  \"{\\\"name\\\":\\\"$PROFILE\\\",\\\"version\\\":\\\"$VERSION\\\"}\"\n        echo\n        echo\n    done\n}\n\n\ninstall_a2() { \n    sudo snap install jq\n    sudo hostnamectl set-hostname ${var_automate_hostname} \n    sudo sysctl -w vm.max_map_count=262144 \n    sudo sysctl -w vm.dirty_expire_centisecs=20000\n    sudo mkdir -p /etc/chef-automate \n    curl https://packages.chef.io/files/${var_channel}/latest/chef-automate-cli/chef-automate_linux_amd64.zip |gunzip - \u003e chef-automate \u0026\u0026 chmod +x chef-automate\n#      \"sudo chmod +x /tmp/install_chef_automate_cli.sh\",\n#      \"sudo bash /tmp/install_chef_automate_cli.sh\", \n    sudo ./chef-automate init-config --file /tmp/config.toml $(if ${var_automate_custom_ssl}; then echo '--certificate /tmp/ssl_cert --private-key /tmp/ssl_key'; fi)\n    sudo sed -i 's/fqdn = \\\".*\\\"/fqdn = \\\"${var_automate_hostname}\\\"/g' /tmp/config.toml\n    sudo sed -i 's/channel = \\\".*\\\"/channel = \\\"${var_channel}\\\"/g' /tmp/config.toml\n    sudo sed -i 's/license = \\\".*\\\"/license = \\\"${var_automate_license}\\\"/g' /tmp/config.toml\n#     \"sudo rm -f /tmp/ssl_cert /tmp/ssl_key\",\n\n    sudo mv /tmp/config.toml /etc/chef-automate/config.toml \n    sudo ./chef-automate deploy /etc/chef-automate/config.toml --product automate --product chef-server --product builder --accept-terms-and-mlsa\n#      \"sudo ./chef-automate applications enable\", \n\n#    sudo ./chef-automate config patch /tmp/automate-eas-config.toml\n}\n\n\ncreate_infra_users() { \n    sudo chef-server-ctl user-create ${var_chef_user1} chef user ${var_chef_user1}@chef.io '1234chefabcd' --filename $HOME/${var_chef_user1}.pem\n    sudo chef-server-ctl org-create ${var_chef_organization} 'automate' --association_user ${var_chef_user1}  --filename $HOME/${var_chef_organization}-validator.pem\n}\n\n\ncreate_a2_users() {\n    echo \"xxxxx Add Automate Users xxxxx\"\n    export TOKEN=`sudo chef-automate admin-token`\n    echo $TOKEN\n    for i in {1..10}\n    do\n        USERNAME=\"workstation-$i\"\n        echo \"creating user $USERNAME\"\n\tcurl -k -H \"api-token: $TOKEN\" -H \"Content-Type: application/json\" https://${var_automate_hostname}/api/v0/auth/users?pretty \\\n        --data \"{\\\"name\\\":\\\"$USERNAME\\\", \\\"username\\\":\\\"$USERNAME\\\", \\\"password\\\":\\\"workstation!\\\"}\"\n    done\n}\n\noutput_information() {\n    echo \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Client PEM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" \n    sudo cat $HOME/${var_chef_user1}.pem\n    echo\n    echo \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Validator PEM xxxxxxxxxxxxxxxxxxxxxxxxxxxx\" \n    sudo cat $HOME/${var_chef_organization}-validator.pem\n \n    sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml \n    sudo echo -e api-token = \\\"$TOKEN\\\" \u003e\u003e $HOME/automate-credentials.toml\n    sudo cat $HOME/automate-credentials.toml\n}\n\ninstall_chef_workstation() {\n    echo \"xxxxx Install Chef Workstation xxxxx\"\n    sudo wget https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb\n    sudo dpkg -i chef-workstation_0.17.5-1_amd64.deb\n}\n\nconfig_workstation() {\n    chef generate repo chef-repo --chef-license accept\n    mkdir -p /home/ubuntu/chef-repo/.chef\n    cp /home/ubuntu/${var_chef_user1}.pem /home/ubuntu/chef-repo/.chef/${var_chef_user1}.pem\n\n    echo 'log_location     STDOUT' \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"chef_server_url 'https://${var_automate_hostname}/organizations/${var_chef_organization}'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"validation_client_name '${var_chef_user1}'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"validation_key '/home/ubuntu/chef-repo/.chef/${var_chef_user1}.pem'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"node_name '${var_chef_user1}'\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n    echo -e \"ssl_verify_mode :verify_none\" \u003e\u003e /home/ubuntu/chef-repo/.chef/config.rb\n}\n\ninstall_cookbooks(){\n    cd /home/ubuntu/chef-repo\n    knife ssl fetch\n    \n    cd /home/ubuntu/chef-repo/cookbooks\n    git clone https://github.com/anthonygrees/audit_agr\n    cd /home/ubuntu/chef-repo/cookbooks/audit_agr\n    berks install\n    berks upload\n\n    cd /home/ubuntu/chef-repo/cookbooks\n    git clone https://github.com/anthonygrees/chef-client\n    cd /home/ubuntu/chef-repo/cookbooks/chef-client\n    berks install\n    berks upload\n}\n\n# TOKEN is somewhat global var\n# created in create_a2_users\n# used in download_compliance_profiles,output_information\n# \ninstall_a2\nsleep 60\ncreate_a2_users\ncreate_infra_users\ndownload_compliance_profiles\noutput_information\ninstall_chef_workstation\nconfig_workstation\ninstall_cookbooks\n",
+            "vars": {
+              "var_automate_custom_ssl": "false",
+              "var_automate_hostname": "anthony-a2.chef-demo.com",
+              "var_automate_license": "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YjEzNDc4LTdhNzktNDZmZS1iOTI5LTg5NDFjZGNlNzU0OSIsInZlcnNpb24iOiIxIiwidHlwZSI6ImNvbW1lcmNpYWwiLCJnZW5lcmF0b3IiOiJjaGVmL2xpY2Vuc2UtMi4wLjAiLCJrZXlfc2hhMjU2IjoiZTBkZjI4YzhiYzY4MTUwZWRiZmVmOThjZDZiN2RjNDM5YzFmODBjN2U3ZWY3NDc4OTNhNjg5M2EyZjdiNjBmNyIsImdlbmVyYXRpb25fZGF0ZSI6eyJzZWNvbmRzIjoxNTYxNzU5OTg2fSwiY3VzdG9tZXIiOiJIb25leXdlbGwgLSBJbmRpYSIsImN1c3RvbWVyX2lkIjoiMDA2ODAwMDAwMUFlQlJEQUEzIiwiY3VzdG9tZXJfaWRfdmVyc2lvbiI6IjEiLCJlbnRpdGxlbWVudHMiOlt7Im5hbWUiOiJIb25leXdlbGwgLSBJbmRpYSBSZW5ld2FsIDE1MDAwIE5vZGVzIiwibWVhc3VyZSI6Im5vZGVzIiwibGltaXQiOi0xLCJzdGFydCI6eyJzZWNvbmRzIjoxNTYxOTM5MjAwfSwiZW5kIjp7InNlY29uZHMiOjE1OTM1NjE1OTl9fV19.AOhUUsOPALWnYa6pJ1b1RqvwSfw6ffrxUhvoTjx5t1jkdXOYoS1D4wkFU2t9-q-feLc8oU43Q1PgKqW72yRz8s9qAWL8srplLAoJZ7krHUOIgepxE-qJLjYEB0VUdmU6hry9vv7kVOLVQ7sqyw_ckOYAuuySgTfIUw0Be1Nx29Nu_WSH",
+              "var_channel": "current",
+              "var_chef_organization": "reesyorg",
+              "var_chef_user1": "anthony"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "ami": "ami-0e23ea41be77feacd",
+            "arn": "arn:aws:ec2:us-west-2:496323866215:instance/i-007aaef3db3815ec8",
+            "associate_public_ip_address": true,
+            "availability_zone": "us-west-2a",
+            "cpu_core_count": 2,
+            "cpu_threads_per_core": 2,
+            "credit_specification": [],
+            "disable_api_termination": false,
+            "ebs_block_device": [],
+            "ebs_optimized": true,
+            "ephemeral_block_device": [],
+            "get_password_data": false,
+            "host_id": null,
+            "iam_instance_profile": "",
+            "id": "i-007aaef3db3815ec8",
+            "instance_initiated_shutdown_behavior": null,
+            "instance_state": "running",
+            "instance_type": "m5.xlarge",
+            "ipv6_address_count": 0,
+            "ipv6_addresses": [],
+            "key_name": "anthonyrees_sa_aws",
+            "monitoring": false,
+            "network_interface": [],
+            "network_interface_id": null,
+            "password_data": "",
+            "placement_group": "",
+            "primary_network_interface_id": "eni-0121e99232d9fcbc9",
+            "private_dns": "ip-172-31-54-11.us-west-2.compute.internal",
+            "private_ip": "172.31.54.11",
+            "public_dns": "ec2-18-237-113-205.us-west-2.compute.amazonaws.com",
+            "public_ip": "18.237.113.205",
+            "root_block_device": [
+              {
+                "delete_on_termination": true,
+                "iops": 300,
+                "volume_id": "vol-00eedce22d0d35761",
+                "volume_size": 100,
+                "volume_type": "gp2"
+              }
+            ],
+            "security_groups": [],
+            "source_dest_check": true,
+            "subnet_id": "subnet-0c9734c5d4c7af7ca",
+            "tags": {
+              "Name": "chef_automate_anthonyrees_e34d74f1",
+              "X-Application": "national_parks",
+              "X-Contact": "anthony@chef.io",
+              "X-Customer": "testing",
+              "X-Dept": "sales",
+              "X-Project": "hab_demos",
+              "X-TTL": "8"
+            },
+            "tenancy": "default",
+            "timeouts": null,
+            "user_data": null,
+            "user_data_base64": null,
+            "volume_tags": {},
+            "vpc_security_group_ids": [
+              "sg-0ef08c86a8da7607f"
+            ]
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "workstation",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "ami": "ami-0829d7f19db0f2b10",
+            "arn": "arn:aws:ec2:us-west-2:496323866215:instance/i-0409220fbaa4e3c54",
+            "associate_public_ip_address": true,
+            "availability_zone": "us-west-2a",
+            "cpu_core_count": 1,
+            "cpu_threads_per_core": 2,
+            "credit_specification": [
+              {
+                "cpu_credits": "unlimited"
+              }
+            ],
+            "disable_api_termination": false,
+            "ebs_block_device": [],
+            "ebs_optimized": false,
+            "ephemeral_block_device": [],
+            "get_password_data": false,
+            "host_id": null,
+            "iam_instance_profile": "testKitchenAndKnifeEc2",
+            "id": "i-0409220fbaa4e3c54",
+            "instance_initiated_shutdown_behavior": null,
+            "instance_state": "running",
+            "instance_type": "t3.large",
+            "ipv6_address_count": 0,
+            "ipv6_addresses": [],
+            "key_name": "anthonyrees_sa_aws",
+            "monitoring": false,
+            "network_interface": [],
+            "network_interface_id": null,
+            "password_data": "",
+            "placement_group": "",
+            "primary_network_interface_id": "eni-00828198a3700970b",
+            "private_dns": "ip-172-31-54-221.us-west-2.compute.internal",
+            "private_ip": "172.31.54.221",
+            "public_dns": "ec2-34-215-253-219.us-west-2.compute.amazonaws.com",
+            "public_ip": "34.215.253.219",
+            "root_block_device": [
+              {
+                "delete_on_termination": true,
+                "iops": 300,
+                "volume_id": "vol-0f934b0b03238a072",
+                "volume_size": 100,
+                "volume_type": "gp2"
+              }
+            ],
+            "security_groups": [],
+            "source_dest_check": true,
+            "subnet_id": "subnet-0c9734c5d4c7af7ca",
+            "tags": {
+              "Name": "anthony@chef.io-workstation-0",
+              "X-Application": "national_parks",
+              "X-Contact": "anthony@chef.io",
+              "X-Customer": "testing",
+              "X-Dept": "sales",
+              "X-Project": "hab_demos",
+              "X-TTL": "8"
+            },
+            "tenancy": "default",
+            "timeouts": null,
+            "user_data": "802e7c86e16320de207f2f252b8a0b94fde6fd5b",
+            "user_data_base64": null,
+            "volume_tags": {},
+            "vpc_security_group_ids": [
+              "sg-04faf9d6151700b6b"
+            ]
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_security_group.chef_automate",
+            "aws_security_group.habworkshop",
+            "aws_subnet.habmgmt-subnet-a",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "habmgmt-gateway",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "igw-054c558e7118f3a91",
+            "owner_id": "496323866215",
+            "tags": {
+              "Name": "habmgmt-gateway"
+            },
+            "vpc_id": "vpc-097251fdfc5061b5b"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_vpc.habmgmt-vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "access_logs": [
+              {
+                "bucket": "",
+                "enabled": false,
+                "prefix": ""
+              }
+            ],
+            "arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:loadbalancer/app/chef-automate-e34d74f1/10f531fcdb0fc26e",
+            "arn_suffix": "app/chef-automate-e34d74f1/10f531fcdb0fc26e",
+            "dns_name": "chef-automate-e34d74f1-1463403290.us-west-2.elb.amazonaws.com",
+            "enable_cross_zone_load_balancing": null,
+            "enable_deletion_protection": false,
+            "enable_http2": true,
+            "id": "arn:aws:elasticloadbalancing:us-west-2:496323866215:loadbalancer/app/chef-automate-e34d74f1/10f531fcdb0fc26e",
+            "idle_timeout": 60,
+            "internal": false,
+            "ip_address_type": "ipv4",
+            "load_balancer_type": "application",
+            "name": "chef-automate-e34d74f1",
+            "name_prefix": null,
+            "security_groups": [
+              "sg-0ef08c86a8da7607f"
+            ],
+            "subnet_mapping": [
+              {
+                "allocation_id": "",
+                "subnet_id": "subnet-0470145eb36f414f6"
+              },
+              {
+                "allocation_id": "",
+                "subnet_id": "subnet-0c9734c5d4c7af7ca"
+              }
+            ],
+            "subnets": [
+              "subnet-0470145eb36f414f6",
+              "subnet-0c9734c5d4c7af7ca"
+            ],
+            "tags": {
+              "Name": "testing-hab_demos_e34d74f1_national_parks_alb",
+              "X-Application": "national_parks",
+              "X-Contact": "anthony@chef.io",
+              "X-Customer": "testing",
+              "X-Dept": "sales",
+              "X-Project": "hab_demos",
+              "X-TTL": "8"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-097251fdfc5061b5b",
+            "zone_id": "Z1H1FL5HABSF5"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_subnet.habmgmt-subnet-b",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_listener",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:listener/app/chef-automate-e34d74f1/10f531fcdb0fc26e/4af2efde36aace95",
+            "certificate_arn": "arn:aws:acm:us-west-2:496323866215:certificate/1ca6e53c-5b80-4292-a42b-5123c84c2051",
+            "default_action": [
+              {
+                "authenticate_cognito": [],
+                "authenticate_oidc": [],
+                "fixed_response": [],
+                "order": 1,
+                "redirect": [],
+                "target_group_arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:targetgroup/e34d74f1/7043fd4f33114a2f",
+                "type": "forward"
+              }
+            ],
+            "id": "arn:aws:elasticloadbalancing:us-west-2:496323866215:listener/app/chef-automate-e34d74f1/10f531fcdb0fc26e/4af2efde36aace95",
+            "load_balancer_arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:loadbalancer/app/chef-automate-e34d74f1/10f531fcdb0fc26e",
+            "port": 443,
+            "protocol": "HTTPS",
+            "ssl_policy": "ELBSecurityPolicy-2016-08",
+            "timeouts": null
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsicmVhZCI6NjAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "aws_lb.chef_automate",
+            "aws_lb_target_group.chef_automate",
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_subnet.habmgmt-subnet-b",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_listener_certificate",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "certificate_arn": "arn:aws:acm:us-west-2:496323866215:certificate/1ca6e53c-5b80-4292-a42b-5123c84c2051",
+            "id": "arn:aws:elasticloadbalancing:us-west-2:496323866215:listener/app/chef-automate-e34d74f1/10f531fcdb0fc26e/4af2efde36aace95_arn:aws:acm:us-west-2:496323866215:certificate/1ca6e53c-5b80-4292-a42b-5123c84c2051",
+            "listener_arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:listener/app/chef-automate-e34d74f1/10f531fcdb0fc26e/4af2efde36aace95"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_lb.chef_automate",
+            "aws_lb_listener.chef_automate",
+            "aws_lb_target_group.chef_automate",
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_subnet.habmgmt-subnet-b",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_target_group",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:targetgroup/e34d74f1/7043fd4f33114a2f",
+            "arn_suffix": "targetgroup/e34d74f1/7043fd4f33114a2f",
+            "deregistration_delay": 300,
+            "health_check": [
+              {
+                "enabled": true,
+                "healthy_threshold": 5,
+                "interval": 30,
+                "matcher": "200",
+                "path": "/",
+                "port": "traffic-port",
+                "protocol": "HTTPS",
+                "timeout": 5,
+                "unhealthy_threshold": 2
+              }
+            ],
+            "id": "arn:aws:elasticloadbalancing:us-west-2:496323866215:targetgroup/e34d74f1/7043fd4f33114a2f",
+            "lambda_multi_value_headers_enabled": false,
+            "name": "e34d74f1",
+            "name_prefix": null,
+            "port": 443,
+            "protocol": "HTTPS",
+            "proxy_protocol_v2": false,
+            "slow_start": 0,
+            "stickiness": [
+              {
+                "cookie_duration": 86400,
+                "enabled": false,
+                "type": "lb_cookie"
+              }
+            ],
+            "tags": {},
+            "target_type": "instance",
+            "vpc_id": "vpc-097251fdfc5061b5b"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_lb.chef_automate",
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_subnet.habmgmt-subnet-b",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_target_group_attachment",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "availability_zone": null,
+            "id": "arn:aws:elasticloadbalancing:us-west-2:496323866215:targetgroup/e34d74f1/7043fd4f33114a2f-20200329211727500300000001",
+            "port": 443,
+            "target_group_arn": "arn:aws:elasticloadbalancing:us-west-2:496323866215:targetgroup/e34d74f1/7043fd4f33114a2f",
+            "target_id": "i-007aaef3db3815ec8"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_lb.chef_automate",
+            "aws_lb_target_group.chef_automate",
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_subnet.habmgmt-subnet-b",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "habmgmt-internet-access",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "igw-054c558e7118f3a91",
+            "id": "r-rtb-056ae329272ca671d1080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "route_table_id": "rtb-056ae329272ca671d",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "aws_internet_gateway.habmgmt-gateway",
+            "aws_vpc.habmgmt-vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route53_record",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "alias": [],
+            "allow_overwrite": null,
+            "failover_routing_policy": [],
+            "fqdn": "anthony-a2.chef-demo.com",
+            "geolocation_routing_policy": [],
+            "health_check_id": "",
+            "id": "Z2GLGMM0F862K7_anthony-a2.chef-demo.com_CNAME",
+            "latency_routing_policy": [],
+            "multivalue_answer_routing_policy": null,
+            "name": "anthony-a2.chef-demo.com",
+            "records": [
+              "chef-automate-e34d74f1-1463403290.us-west-2.elb.amazonaws.com"
+            ],
+            "set_identifier": "",
+            "ttl": 30,
+            "type": "CNAME",
+            "weighted_routing_policy": [],
+            "zone_id": "Z2GLGMM0F862K7"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_lb.chef_automate",
+            "aws_security_group.chef_automate",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_subnet.habmgmt-subnet-b",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "chef_automate",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:496323866215:security-group/sg-0ef08c86a8da7607f",
+            "description": "Chef Automate Server",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-0ef08c86a8da7607f",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 22,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 22
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 4222,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 4222
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 443,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 443
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 80,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 80
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 2379,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 2380
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 5432,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 5432
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 7331,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 7331
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 9200,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 9400
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 9631,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 9631
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 9631,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "udp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 9631
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 9638,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 9638
+              },
+              {
+                "cidr_blocks": [],
+                "description": "",
+                "from_port": 9638,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "udp",
+                "security_groups": [],
+                "self": true,
+                "to_port": 9638
+              }
+            ],
+            "name": "chef_automate_e34d74f1",
+            "name_prefix": null,
+            "owner_id": "496323866215",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Name": "testing-hab_demos_e34d74f1_national_parks_security_group",
+              "X-Application": "national_parks",
+              "X-Contact": "anthony@chef.io",
+              "X-Customer": "testing",
+              "X-Dept": "sales",
+              "X-Project": "hab_demos",
+              "X-TTL": "8"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-097251fdfc5061b5b"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "habworkshop",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:496323866215:security-group/sg-04faf9d6151700b6b",
+            "description": "Security group for Habitat workshop for Windows",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-04faf9d6151700b6b",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 3389,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 3389
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 5985,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 5986
+              }
+            ],
+            "name": "habworkshop-e34d74f1",
+            "name_prefix": null,
+            "owner_id": "496323866215",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Name": "testing-hab_demos-e34d74f1-national_parks-security_group",
+              "X-Application": "national_parks",
+              "X-Contact": "anthony@chef.io",
+              "X-Customer": "testing",
+              "X-Dept": "sales",
+              "X-Project": "hab_demos",
+              "X-TTL": "8"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-097251fdfc5061b5b"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_9638_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 9638,
+            "id": "sgrule-266691592",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 9638,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_allow_22_tcp_all",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 22,
+            "id": "sgrule-3143354142",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 22,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_allow_9631_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 9631,
+            "id": "sgrule-794430750",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 9631,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_allow_9631_udp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 9631,
+            "id": "sgrule-2332405489",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "udp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 9631,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_allow_9638_udp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 9638,
+            "id": "sgrule-2881144807",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "udp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 9638,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_2379_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 2379,
+            "id": "sgrule-2432508826",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 2380,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_4222_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 4222,
+            "id": "sgrule-2205638037",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 4222,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_443_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 443,
+            "id": "sgrule-4211765339",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 443,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_5432_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 5432,
+            "id": "sgrule-1017809542",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 5432,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_7331_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 7331,
+            "id": "sgrule-1779636928",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 7331,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_80_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 80,
+            "id": "sgrule-231840427",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 80,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_chef_automate_allow_9200_to_9400_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [],
+            "description": "",
+            "from_port": 9200,
+            "id": "sgrule-926539025",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": "sg-0ef08c86a8da7607f",
+            "to_port": 9400,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_rdp_all",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 3389,
+            "id": "sgrule-2237034389",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-04faf9d6151700b6b",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 3389,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.habworkshop",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_winrm_all",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 5985,
+            "id": "sgrule-1081374766",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "tcp",
+            "security_group_id": "sg-04faf9d6151700b6b",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 5986,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.habworkshop",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "linux_egress_allow_0-65535_all",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 0,
+            "id": "sgrule-221232510",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "-1",
+            "security_group_id": "sg-0ef08c86a8da7607f",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 0,
+            "type": "egress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.chef_automate",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "windows_egress_allow_0-65535_all",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "",
+            "from_port": 0,
+            "id": "sgrule-2334841768",
+            "ipv6_cidr_blocks": [],
+            "prefix_list_ids": [],
+            "protocol": "-1",
+            "security_group_id": "sg-04faf9d6151700b6b",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 0,
+            "type": "egress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.habworkshop",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "habmgmt-subnet-a",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:496323866215:subnet/subnet-0c9734c5d4c7af7ca",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-west-2a",
+            "availability_zone_id": "usw2-az1",
+            "cidr_block": "172.31.54.0/24",
+            "id": "subnet-0c9734c5d4c7af7ca",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "map_public_ip_on_launch": true,
+            "owner_id": "496323866215",
+            "tags": {
+              "Name": "habmgmt-subnet-a"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-097251fdfc5061b5b"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.habmgmt-vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "habmgmt-subnet-b",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:496323866215:subnet/subnet-0470145eb36f414f6",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-west-2b",
+            "availability_zone_id": "usw2-az2",
+            "cidr_block": "172.31.55.0/24",
+            "id": "subnet-0470145eb36f414f6",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "map_public_ip_on_launch": true,
+            "owner_id": "496323866215",
+            "tags": {
+              "Name": "habmgmt-subnet-b"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-097251fdfc5061b5b"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.habmgmt-vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "habmgmt-vpc",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:496323866215:vpc/vpc-097251fdfc5061b5b",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "172.31.0.0/16",
+            "default_network_acl_id": "acl-0cb90a8c398abf5b4",
+            "default_route_table_id": "rtb-056ae329272ca671d",
+            "default_security_group_id": "sg-0a7c029f9a89e2f72",
+            "dhcp_options_id": "dopt-90b951f5",
+            "enable_classiclink": false,
+            "enable_classiclink_dns_support": false,
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "id": "vpc-097251fdfc5061b5b",
+            "instance_tenancy": "default",
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "main_route_table_id": "rtb-056ae329272ca671d",
+            "owner_id": "496323866215",
+            "tags": {
+              "Name": "anthonyrees-vpc",
+              "X-Application": "national_parks",
+              "X-Contact": "anthony@chef.io",
+              "X-Customer": "testing",
+              "X-Dept": "sales",
+              "X-Project": "hab_demos",
+              "X-TTL": "8"
+            }
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "chef",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": [
+        {
+          "index_key": 0,
+          "status": "tainted",
+          "schema_version": 0,
+          "attributes": {
+            "id": "8645500298931236709",
+            "triggers": null
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_instance.workstation",
+            "aws_security_group.chef_automate",
+            "aws_security_group.habworkshop",
+            "aws_subnet.habmgmt-subnet-a",
+            "null_resource.key_kitchen",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "chef-repo",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "chef1",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "key_kitchen",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "id": "8087548749597668354",
+            "triggers": null
+          },
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_instance.workstation",
+            "aws_security_group.chef_automate",
+            "aws_security_group.habworkshop",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_vpc.habmgmt-vpc",
+            "null_resource.wait_for_mins",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "key_user",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "id": "7304418907699712543",
+            "triggers": null
+          },
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_instance.workstation",
+            "aws_security_group.chef_automate",
+            "aws_security_group.habworkshop",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_vpc.habmgmt-vpc",
+            "null_resource.wait_for_mins",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "key_validator",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "id": "6938126704112343646",
+            "triggers": null
+          },
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_instance.workstation",
+            "aws_security_group.chef_automate",
+            "aws_security_group.habworkshop",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_vpc.habmgmt-vpc",
+            "null_resource.wait_for_mins",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "open_a2",
+      "each": "list",
+      "provider": "provider.null",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "wait_for_mins",
+      "provider": "provider.null",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "8881083738953161430",
+            "triggers": null
+          },
+          "dependencies": [
+            "aws_instance.chef_automate",
+            "aws_instance.workstation",
+            "aws_security_group.chef_automate",
+            "aws_security_group.habworkshop",
+            "aws_subnet.habmgmt-subnet-a",
+            "aws_vpc.habmgmt-vpc",
+            "random_id.instance_id"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "random_id",
+      "name": "instance_id",
+      "provider": "provider.random",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "b64": "40108Q",
+            "b64_std": "40108Q==",
+            "b64_url": "40108Q",
+            "byte_length": 4,
+            "dec": "3813504241",
+            "hex": "e34d74f1",
+            "id": "40108Q",
+            "keepers": null,
+            "prefix": null
+          }
+        }
+      ]
+    }
+  ]
+}
