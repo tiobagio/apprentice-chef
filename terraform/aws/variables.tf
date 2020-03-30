@@ -170,6 +170,10 @@ variable "chef_organization" {
   default = "automate"
 }
 
+variable "upgrade_flag" {
+  description = "if true run the automate installation and configuration, create users, etc. If false, upgrade the fqdn of automate"
+  default = "true"
+}
 
 ////////////////////////////////
 // Workstation 

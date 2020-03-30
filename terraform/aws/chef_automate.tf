@@ -165,6 +165,7 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/templates/chef_automate/user_data.sh.tpl")}"
 
   vars = {
+    var_upgrade_flag = var.upgrade_flag
     var_channel = var.channel
     var_automate_hostname = var.automate_hostname
     var_automate_custom_ssl = var.automate_custom_ssl

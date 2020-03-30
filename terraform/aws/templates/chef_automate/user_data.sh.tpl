@@ -47,6 +47,14 @@ install_a2() {
 }
 
 
+update_a2() { 
+    sudo hostnamectl set-hostname ${var_automate_hostname} 
+    sudo ./chef-automate show config > /tmp/update_config.toml
+    sudo sed -i 's/fqdn = \".*\"/fqdn = \"${var_automate_hostname}\"/g' /tmp/update_config.toml
+    sudo ./chef-automate config patch /tmp/update_config.toml 
+}
+
+
 create_infra_users() { 
     sudo chef-server-ctl user-create ${var_chef_user1} chef user ${var_chef_user1}@chef.io '1234chefabcd' --filename $HOME/${var_chef_user1}.pem
     sudo chef-server-ctl org-create ${var_chef_organization} 'automate' --association_user ${var_chef_user1}  --filename $HOME/${var_chef_organization}-validator.pem
@@ -74,7 +82,7 @@ output_information() {
     sudo cat $HOME/${var_chef_organization}-validator.pem
  
     sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml 
-    sudo echo -e api-token = \"$TOKEN\" >> $HOME/automate-credentials.toml
+    sudo echo -e \"api-token =\" $TOKEN >> $HOME/automate-credentials.toml
     sudo cat $HOME/automate-credentials.toml
 }
 
@@ -114,16 +122,22 @@ install_cookbooks(){
     berks upload
 }
 
-# TOKEN is somewhat global var
-# created in create_a2_users
-# used in download_compliance_profiles,output_information
-# 
-install_a2
-sleep 60
-create_a2_users
-create_infra_users
-download_compliance_profiles
-output_information
-install_chef_workstation
-config_workstation
-install_cookbooks
+
+if test "x${var_upgrade_flag}" == "xtrue"; then
+    echo "Reinstall ..."
+    install_a2
+    sleep 60
+    create_a2_users
+    create_infra_users
+
+    # use TOKEN
+    download_compliance_profiles
+    output_information
+
+    install_chef_workstation
+    config_workstation
+    install_cookbooks
+else
+    echo "Update the fqdn only ..."
+    update_a2
+fi
