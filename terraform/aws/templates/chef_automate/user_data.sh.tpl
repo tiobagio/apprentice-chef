@@ -24,26 +24,61 @@ download_compliance_profiles() {
 }
 
 
+isrunning () {
+  if sudo $1 status >/dev/null 2>&1
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
+
+exists () {
+  if sudo $1 version >/dev/null 2>&1
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
+
 install_a2() { 
     sudo snap install jq
     sudo hostnamectl set-hostname ${var_automate_hostname} 
+    if isrunning chef-automate; then
+       sudo chef-automate stop
+    fi
+
     sudo sysctl -w vm.max_map_count=262144 
     sudo sysctl -w vm.dirty_expire_centisecs=20000
     sudo mkdir -p /etc/chef-automate 
+
     curl https://packages.chef.io/files/${var_channel}/latest/chef-automate-cli/chef-automate_linux_amd64.zip |gunzip - > chef-automate && chmod +x chef-automate
-#      "sudo chmod +x /tmp/install_chef_automate_cli.sh",
-#      "sudo bash /tmp/install_chef_automate_cli.sh", 
     sudo ./chef-automate init-config --file /tmp/config.toml $(if ${var_automate_custom_ssl}; then echo '--certificate /tmp/ssl_cert --private-key /tmp/ssl_key'; fi)
     sudo sed -i 's/fqdn = \".*\"/fqdn = \"${var_automate_hostname}\"/g' /tmp/config.toml
     sudo sed -i 's/channel = \".*\"/channel = \"${var_channel}\"/g' /tmp/config.toml
     sudo sed -i 's/license = \".*\"/license = \"${var_automate_license}\"/g' /tmp/config.toml
-#     "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
+#   "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
 
     sudo mv /tmp/config.toml /etc/chef-automate/config.toml 
     sudo ./chef-automate deploy /etc/chef-automate/config.toml --product automate --product chef-server --product builder --accept-terms-and-mlsa
-#      "sudo ./chef-automate applications enable", 
+#   sudo ./chef-automate applications enable
+#   sudo ./chef-automate config patch /tmp/automate-eas-config.toml
 
-#    sudo ./chef-automate config patch /tmp/automate-eas-config.toml
+}
+
+
+update_a2() { 
+    sudo hostnamectl set-hostname ${var_automate_hostname} 
+    if exists chef-automate; then
+        echo "Chef Automate already exists. Changing the fqdn...."
+
+        sudo ./chef-automate config show > /tmp/update_config.toml
+        sudo sed -i 's/fqdn = \".*\"/fqdn = \"${var_automate_hostname}\"/g' /tmp/update_config.toml
+        sudo ./chef-automate config patch /tmp/update_config.toml 
+    fi
 }
 
 
@@ -74,7 +109,7 @@ output_information() {
     sudo cat $HOME/${var_chef_organization}-validator.pem
  
     sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml 
-    sudo echo -e api-token = \"$TOKEN\" >> $HOME/automate-credentials.toml
+    sudo echo -e \"api-token =\" $TOKEN >> $HOME/automate-credentials.toml
     sudo cat $HOME/automate-credentials.toml
 }
 
@@ -114,16 +149,21 @@ install_cookbooks(){
     berks upload
 }
 
-# TOKEN is somewhat global var
-# created in create_a2_users
-# used in download_compliance_profiles,output_information
-# 
-install_a2
-sleep 60
-create_a2_users
-create_infra_users
-download_compliance_profiles
-output_information
-install_chef_workstation
-config_workstation
-install_cookbooks
+
+if test "x${var_upgrade_flag}" == "xtrue"; then
+    echo "Reinstall ..."
+    install_a2
+    sleep 60
+    create_a2_users
+    create_infra_users
+
+    # use TOKEN
+    download_compliance_profiles
+    output_information
+
+    install_chef_workstation
+    config_workstation
+    install_cookbooks
+else
+    update_a2
+fi

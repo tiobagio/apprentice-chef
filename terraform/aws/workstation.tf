@@ -32,9 +32,9 @@ resource "aws_instance" "workstation" {
     winrm set winrm/config '@{MaxTimeoutms="1800000"}'
     winrm set winrm/config/service '@{AllowUnencrypted="true"}'
     winrm set winrm/config/service/auth '@{Basic="true"}'
-    netsh advfirewall firewall add rule name=”WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
-    netsh advfirewall firewall add rule name=”WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
-    netsh advfirewall firewall add rule name=”RDP 3389" protocol=TCP dir=in localport=3389 action=allow
+    netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
+    netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
+    netsh advfirewall firewall add rule name="RDP 3389" protocol=TCP dir=in localport=3389 action=allow
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
@@ -61,63 +61,12 @@ resource "null_resource" "wait_for_mins" {
   }
 }
 
-resource "null_resource" "chef" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "remote-exec" {
-    inline = [
-      "cd C:\\",
-      "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $true\"",
-      "PowerShell.exe -Command \". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel current -project chef-workstation\"",
-    ]
-      connection {
-        host = aws_instance.workstation[count.index].public_ip
-        type     = "winrm"
-        user     = "chef"
-        password = "RL9@T40BTmXh"
-        insecure = true
-        timeout = "15m"
-      }
-  }
-}
-
-resource "null_resource" "chef1" {
-  depends_on = [null_resource.chef]
-  count = var.counter
-  provisioner "remote-exec" {
-    inline = [
-      "choco install googlechrome -y",
-      "choco install vscode -y",
-      "choco install cmder -y",
-      "choco install git -y",
-      "choco install notepad++ -y",
-      "choco upgrade googlechrome -y",
-      "choco install setdefaultbrowser -y",
-      "SetDefaultBrowser.exe HKLM \"Google Chrome\"",
-      "cd C:\\",
-      "chef generate repo chef-repo --chef-license accept",
-      "git config --global user.email \"me@chef.io\"",
-      "git config --global user.name \"Chef\"",
-      "md C:\\chef-repo\\.chef",
-      "PowerShell.exe -Command \"Set-MpPreference -DisableRealtimeMonitoring $false\"",
-    ]
-      connection {
-        host = aws_instance.workstation[count.index].public_ip
-        type     = "winrm"
-        user     = "chef"
-        password = "RL9@T40BTmXh"
-        insecure = true
-        timeout = "15m"
-      }
-  }
-}
-
 resource "null_resource" "key_user" {
-  depends_on = [null_resource.chef1]
+  depends_on = [null_resource.wait_for_mins]
   count = var.counter
   provisioner "file" {
       source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
-      destination = "C:\\chef-repo\\.chef\\${var.chef_user1}.pem"
+      destination = "C:\\Chef\\.chef\\${var.chef_user1}.pem"
       connection {
         host = aws_instance.workstation[count.index].public_ip
         type     = "winrm"
@@ -131,11 +80,11 @@ resource "null_resource" "key_user" {
 }
 
 resource "null_resource" "key_validator" {
-  depends_on = [null_resource.chef1]
+  depends_on = [null_resource.wait_for_mins]
   count = var.counter
   provisioner "file" {
       source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
-      destination = "C:\\chef-repo\\.chef\\${var.chef_organization}.pem"
+      destination = "C:\\Chef\\.chef\\${var.chef_organization}.pem"
       connection {
           host = aws_instance.workstation[count.index].public_ip
           type     = "winrm"
@@ -148,10 +97,10 @@ resource "null_resource" "key_validator" {
 }
 
 resource "null_resource" "key_kitchen" {
-  depends_on = [null_resource.chef1]
+  depends_on = [null_resource.wait_for_mins]
   count = var.counter
   provisioner "file" {
-      source      = "${var.key_path}/src/cookbooks/id_rsa"
+      source      = "${var.key_path}/.ssh/id_rsa"
       destination = "C:\\Users\\Chef\\.ssh\\id_rsa"
       connection {
           host = aws_instance.workstation[count.index].public_ip
@@ -164,29 +113,14 @@ resource "null_resource" "key_kitchen" {
   }
 }
 
-resource "null_resource" "copy_config_rb" {
-  depends_on = [null_resource.key_kitchen]
-  count = var.counter
-  provisioner "file" {
-    content      = templatefile("${path.module}/templates/config_rb.tpl", { var_chef_user1 = var.chef_user1, var_automate_hostname = var.automate_hostname, var_chef_organization = var.chef_organization })
-    destination = "C:\\chef-repo\\.chef\\config.rb"
-    connection {
-        host = aws_instance.workstation[count.index].public_ip
-        type     = "winrm"
-        user     = "chef"
-        password = "RL9@T40BTmXh"
-        insecure = true
-        timeout = "10m"
-    }
-  }
-}
-
 resource "null_resource" "open_a2" {
-  depends_on = [null_resource.copy_config_rb]
+  depends_on = [null_resource.wait_for_mins]
   count = var.counter
   provisioner "file" {
-    content      = templatefile("${path.module}/templates/open_a2.cmd.tpl", { var_automate_hostname = var.automate_hostname })
-    destination = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\open_a2.cmd"
+    content      = templatefile("${path.module}/templates/open_a2.ps1.tpl", {
+var_automate_hostname = var.automate_hostname, var_chef_user1 = var.chef_user1,
+var_chef_organization = var.chef_organization})
+    destination = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\open_a2.ps1"
       connection {
           host = aws_instance.workstation[count.index].public_ip
           type     = "winrm"
@@ -195,5 +129,24 @@ resource "null_resource" "open_a2" {
           insecure = true
           timeout = "10m"
         }
+  }
+}
+
+
+resource "null_resource" "exec_open_a2" {
+  depends_on = [null_resource.key_kitchen]
+  count = var.counter
+  provisioner "remote-exec" {
+    inline = [
+      "powershell -File \"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\open_a2.ps1\""
+    ]
+      connection {
+        host = aws_instance.workstation[count.index].public_ip
+        type     = "winrm"
+        user     = "chef"
+        password = "RL9@T40BTmXh"
+        insecure = true
+        timeout = "15m"
+      }
   }
 }
