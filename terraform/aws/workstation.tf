@@ -1,11 +1,5 @@
 resource "aws_instance" "workstation" {
-    depends_on = [aws_instance.chef_automate]
-
-#  connection {
-#    type     = "winrm"
-#    user     = "hab"
-#    password = "ch3fh@b1!"
-#  }
+  depends_on = [aws_instance.chef_automate]
 
   count                       = var.counter
   ami                         = data.aws_ami.windows_workstation.id
@@ -14,7 +8,6 @@ resource "aws_instance" "workstation" {
   subnet_id                   = aws_subnet.habmgmt-subnet-a.id
   vpc_security_group_ids      = [aws_security_group.habworkshop.id]
   associate_public_ip_address = true
-  iam_instance_profile        = "testKitchenAndKnifeEc2"
 
   root_block_device {
     delete_on_termination = true
