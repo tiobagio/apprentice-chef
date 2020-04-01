@@ -154,26 +154,34 @@ variable "chef_users" {
   default = ["admin", "automate", "workstation-1"]
 }
 
+variable "a2_user" {
+  default = "workstation"
+}
+
+variable "a2_password" {
+  default = "workstation!"
+}
+
 variable "chef_user1" {
   default = "admin"
 }
-
-variable "chef_user2" {
-  default = "automate"
-}
-
-variable "chef_user3" {
-  default = "workstation-1"
-}
+variable "chef_user1_password" {}
 
 variable "chef_organization" {
   default = "automate"
 }
+variable "upgrade_flag" {
+  description = "if 'true' upgrades automate to the next version.  Otherwise just update the fqdn of$aisting automate"
+  default = ""
+}
+
 
 
 ////////////////////////////////
 // Workstation 
-# variable "a2_ip" {}
+variable "workstation_user" {}
+variable "workstation_password" {}
+
 variable "key_path" {
   description = "The PEM key that students will use on AWS for Kitchen to connect to instances"
 }

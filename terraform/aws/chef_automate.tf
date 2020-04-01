@@ -152,27 +152,22 @@ resource "aws_security_group_rule" "linux_egress_allow_0-65535_all" {
   security_group_id = aws_security_group.chef_automate.id
 }
 
-
-data "template_file" "automate_eas_config" {
-  template = "${file("${path.module}/templates/chef_automate/automate-eas-config.toml.tpl")}"
-
-  vars = {
-    disable_event_tls = "${var.disable_event_tls}"
-  }
-} 
-
 data "template_file" "user_data" {
   template = "${file("${path.module}/templates/chef_automate/user_data.sh.tpl")}"
 
   vars = {
+    var_upgrade_flag = var.upgrade_flag
     var_channel = var.channel
     var_automate_hostname = var.automate_hostname
     var_automate_custom_ssl = var.automate_custom_ssl
     var_automate_license = var.automate_license
     var_chef_user1 = var.chef_user1
     var_chef_organization = var.chef_organization
+    var_a2_user = var.a2_user
+    var_a2_password = var.a2_password
   }
 }
+
 
 resource "aws_instance" "chef_automate" {
   connection {
@@ -188,7 +183,6 @@ resource "aws_instance" "chef_automate" {
   private_ip              = "172.31.54.11"
   vpc_security_group_ids = [aws_security_group.chef_automate.id]
   ebs_optimized          = true
-#  user_data             = data.template_file.user_data.rendered
 
   root_block_device {
     delete_on_termination = true
@@ -206,10 +200,6 @@ resource "aws_instance" "chef_automate" {
     X-TTL         = var.tag_ttl
   }
 
-  provisioner "file" {
-    destination = "/tmp/automate-eas-config.toml"
-    content     = data.template_file.automate_eas_config.rendered
-  }
 
   provisioner "file" {
     destination = "/tmp/ssl_cert"
@@ -221,16 +211,18 @@ resource "aws_instance" "chef_automate" {
     content = var.automate_custom_ssl_private_key
   }
 
-    provisioner "file" {
-      destination = "/tmp/user_data.sh"
-      content      = data.template_file.user_data.rendered
-    }
+  provisioner "file" {
+    destination = "/tmp/user_data.sh"
+    content     = data.template_file.user_data.rendered
+  }
+
 
   provisioner "remote-exec" {
     inline = [
       "bash /tmp/user_data.sh"
     ]
   }
+
   provisioner "local-exec" {
     // Clean up local known_hosts in case we get a re-used public IP
     command = "ssh-keygen -R ${aws_instance.chef_automate.public_ip}"

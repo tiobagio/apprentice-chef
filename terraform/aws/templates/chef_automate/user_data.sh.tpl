@@ -70,15 +70,13 @@ install_a2() {
 }
 
 
-update_a2() { 
-    sudo hostnamectl set-hostname ${var_automate_hostname} 
-    if exists chef-automate; then
-        echo "Chef Automate already exists. Changing the fqdn...."
+update_a2_fqdn() { 
+    echo "Changing Automate fqdn to ${var_automate_hostname}...."
 
-        sudo ./chef-automate config show > /tmp/update_config.toml
-        sudo sed -i 's/fqdn = \".*\"/fqdn = \"${var_automate_hostname}\"/g' /tmp/update_config.toml
-        sudo ./chef-automate config patch /tmp/update_config.toml 
-    fi
+    sudo ./chef-automate config show > /tmp/update_config.toml
+    sudo sed -i 's/fqdn = \".*\"/fqdn = \"${var_automate_hostname}\"/g' /tmp/update_config.toml
+    sudo ./chef-automate config patch /tmp/update_config.toml 
+    sudo hostnamectl set-hostname ${var_automate_hostname} 
 }
 
 
@@ -92,12 +90,13 @@ create_a2_users() {
     echo "xxxxx Add Automate Users xxxxx"
     export TOKEN=`sudo chef-automate admin-token`
     echo $TOKEN
+    PASSWORD="${var_a2_password}"
     for i in {1..10}
     do
-        USERNAME="workstation-$i"
+        USERNAME="${var_a2_user}-$i"
         echo "creating user $USERNAME"
 	curl -k -H "api-token: $TOKEN" -H "Content-Type: application/json" https://${var_automate_hostname}/api/v0/auth/users?pretty \
-        --data "{\"name\":\"$USERNAME\", \"username\":\"$USERNAME\", \"password\":\"workstation!\"}"
+        --data "{\"name\":\"$USERNAME\", \"username\":\"$USERNAME\", \"password\":\"$PASSWORD\"}"
     done
 }
 
@@ -149,9 +148,8 @@ install_cookbooks(){
     berks upload
 }
 
-
 if test "x${var_upgrade_flag}" == "xtrue"; then
-    echo "Reinstall ..."
+    echo "Installing Chef Automate ..."
     install_a2
     sleep 60
     create_a2_users
@@ -165,5 +163,5 @@ if test "x${var_upgrade_flag}" == "xtrue"; then
     config_workstation
     install_cookbooks
 else
-    update_a2
+    update_a2_fqdn
 fi
