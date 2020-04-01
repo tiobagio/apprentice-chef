@@ -8,6 +8,7 @@ resource "aws_instance" "workstation" {
   subnet_id                   = aws_subnet.habmgmt-subnet-a.id
   vpc_security_group_ids      = [aws_security_group.habworkshop.id]
   associate_public_ip_address = true
+  iam_instance_profile        = "testKitchenAndKnifeEc2"
 
   root_block_device {
     delete_on_termination = true
@@ -54,57 +55,6 @@ resource "null_resource" "wait_for_mins" {
   }
 }
 
-resource "null_resource" "key_user" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "file" {
-      source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
-      destination = "C:\\Users\\chef\\${var.chef_user1}.pem"
-      connection {
-        host = aws_instance.workstation[count.index].public_ip
-        type     = "winrm"
-        user     = var.workstation_user
-        password = var.workstation_password
-        insecure = true
-        timeout = "10m"
-      }
-  }
-}
-
-resource "null_resource" "key_validator" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "file" {
-      source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
-      destination = "C:\\Users\\chef\\${var.chef_organization}.pem"
-      connection {
-          host = aws_instance.workstation[count.index].public_ip
-          type     = "winrm"
-          user     = var.workstation_user
-          password = var.workstation_password
-          insecure = true
-          timeout = "10m"
-        }
-  }
-}
-
-resource "null_resource" "key_kitchen" {
-  depends_on = [null_resource.wait_for_mins]
-  count = var.counter
-  provisioner "file" {
-      source      = "${var.key_path}/.ssh/id_rsa"
-      destination = "C:\\Users\\chef\\.ssh\\id_rsa"
-      connection {
-          host      = aws_instance.workstation[count.index].public_ip
-          type      = "winrm"
-          user      = var.workstation_user
-          password  = var.workstation_password
-          insecure  = true
-          timeout   = "10m"
-        }
-  }
-}
-
 #    destination = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\open_a2.ps1"
 resource "null_resource" "open_a2" {
   depends_on = [null_resource.wait_for_mins]
@@ -130,7 +80,7 @@ resource "null_resource" "open_a2" {
 
 
 resource "null_resource" "exec_open_a2" {
-  depends_on = [null_resource.key_kitchen]
+  depends_on = [null_resource.wait_for_mins]
   count = var.counter
   provisioner "remote-exec" {
     inline = [
@@ -146,3 +96,54 @@ resource "null_resource" "exec_open_a2" {
       }
   }
 }
+resource "null_resource" "key_user" {
+  depends_on = [null_resource.exec_open_a2]
+  count = var.counter
+  provisioner "file" {
+      source      = "${var.key_path}/${var.chef_user1}-${aws_instance.chef_automate.public_ip}.pem"
+      destination = "C:\\chef-repo\\.chef\\${var.chef_user1}.pem"
+      connection {
+        host = aws_instance.workstation[count.index].public_ip
+        type     = "winrm"
+        user     = var.workstation_user
+        password = var.workstation_password
+        insecure = true
+        timeout = "10m"
+      }
+  }
+}
+
+resource "null_resource" "key_validator" {
+  depends_on = [null_resource.exec_open_a2]
+  count = var.counter
+  provisioner "file" {
+      source      = "${var.key_path}/${var.chef_organization}-validator-${aws_instance.chef_automate.public_ip}.pem"
+      destination = "C:\\chef-repo\\.chef\\${var.chef_organization}.pem"
+      connection {
+          host = aws_instance.workstation[count.index].public_ip
+          type     = "winrm"
+          user     = var.workstation_user
+          password = var.workstation_password
+          insecure = true
+          timeout = "10m"
+        }
+  }
+}
+
+resource "null_resource" "key_kitchen" {
+  depends_on = [null_resource.exec_open_a2]
+  count = var.counter
+  provisioner "file" {
+      source      = "${var.aws_key_pair_file}"
+      destination = "C:\\Users\\chef\\.ssh\\id_rsa"
+      connection {
+          host      = aws_instance.workstation[count.index].public_ip
+          type      = "winrm"
+          user      = var.workstation_user
+          password  = var.workstation_password
+          insecure  = true
+          timeout   = "10m"
+        }
+  }
+}
+

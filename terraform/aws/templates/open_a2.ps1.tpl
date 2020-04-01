@@ -9,8 +9,8 @@ Set-MpPreference -DisableRealtimeMonitoring $true
 #choco install cmder -y
 #choco install git -y
 
-choco install setdefaultbrowser -y
-choco upgrade googlechrome -y
+choco install setdefaultbrowser -y --no-progress
+choco upgrade googlechrome -y --no-progress
 
 Set-MpPreference -DisableRealtimeMonitoring $false
 
@@ -27,6 +27,7 @@ Add-Content -Path C:\chef-repo\.chef\config.rb -Value 'node_name                
 Add-Content -Path C:\chef-repo\.chef\config.rb -Value 'client_key               "#{current_dir}/${var_chef_user1}.pem"'
 Add-Content -Path C:\chef-repo\.chef\config.rb -Value 'chef_server_url          "https://${var_automate_hostname}/organizations/${var_chef_organization}"'
 Add-Content -Path C:\chef-repo\.chef\config.rb -Value 'cookbook_path            ["#{current_dir}/../cookbooks"]'
+
 
 SetDefaultBrowser.exe HKLM "Google Chrome"
 Start-Process https://${var_automate_hostname}
